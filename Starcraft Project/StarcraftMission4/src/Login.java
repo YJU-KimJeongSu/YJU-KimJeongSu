@@ -193,7 +193,7 @@ public class Login extends JFrame {
 				if ((reg_passwd.getText().equals(reg_passwdCheck.getText()))) {
 					try {
 						register(con, stmt, reg_id.getText(), reg_passwd.getText());
-						login_message.setText("회원가입이 완료되었습니다.");
+//						login_message.setText("회원가입이 완료되었습니다.");
 					} catch (SQLException e1) {
 						// 1번 오류 처리
 						login_message.setText("중복된 ID입니다.");
@@ -217,7 +217,7 @@ public class Login extends JFrame {
 	        }
 		});
 		
-		// 계정 삭제 시 발생 가능한 오류는 1.없는 아이디 삭제   2.비밀번호랑 비밀번호 확인 다름
+		// 계정 삭제 시 발생 가능한 오류는 1.없는 아이디 삭제   2.비밀번호랑 비밀번호 확인 다름   3.비밀번호 틀림
 		reg_deleteAccount.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -227,8 +227,6 @@ public class Login extends JFrame {
 						
 						hideRegPage();
 						showLoginPage();
-						
-						login_message.setText("회원탈퇴가 완료되었습니다.");
 					} catch (SQLException e1) {
 						// 1번 오류 처리... 하고 싶었지만 없는 아이디 삭제한다고 에러가 발생하진 않아서 작동 안됨
 						// 그래서 deleteAccount 메소드에서 1번 오류 처리
@@ -335,18 +333,30 @@ public class Login extends JFrame {
 		}
 	}	
 	private void register(Connection con, Statement stmt, String id, String password) throws SQLException {
-		String s = "insert into star_login (id, password) values ('" + id + "', '" + password + "');";
-		stmt.executeUpdate(s);
+		if (id.equals("") || password.equals("")) {
+			login_message.setText("빈 값은 입력할 수 없습니다");
+		}
+		else {
+			String s = "insert into star_login (id, password) values ('" + id + "', '" + password + "');";
+			stmt.executeUpdate(s);
+			login_message.setText("회원가입이 완료되었습니다.");
+		}
+		
 	}	
 	private void deleteAccount(Connection con, Statement stmt, String id, String password) throws SQLException {
 		String s = "select password from star_login where id = '" + id + "'";
 		ResultSet rs = stmt.executeQuery(s);
-		
-		// 위의 1번 오류 처리
+
 		if (!(rs.next())) { login_message.setText("존재하지 않는 ID입니다."); }
+		else if (rs.getString("password").equals(password)) {
+			String s1 = "delete from star_login where id = '" + id + "';";
+			stmt.executeUpdate(s1);
+			login_message.setText("회원탈퇴가 완료되었습니다.");
+		}
+		else {
+			login_message.setText("잘못된 비밀번호입니다.");
+		}
 		
-		String s1 = "delete from star_login where id = '" + id + "';";
-		stmt.executeUpdate(s1);
 	}	
 	private void alterAccount(Connection con, Statement stmt, String id, String password, String newPassword) throws SQLException {
 		String s = "select password from star_login where id = '" + id + "'";
