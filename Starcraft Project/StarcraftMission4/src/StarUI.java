@@ -88,11 +88,9 @@ public class StarUI extends JFrame implements Runnable, MouseListener, ActionLis
 		
 		progressing = new Thread(this);
 		progressing.start();
-		System.out.println(progressing.getName());
 		
 		Thread resourcesChecker = new Thread(new ResourcesChecker());
 		resourcesChecker.start();
-		System.out.println(resourcesChecker.getName());
 		
 		setBounds(0, 58, 640, 650);
 		setVisible(true);
