@@ -5,7 +5,7 @@ import java.sql.*;
 import javax.swing.*;
 
 public class Login extends JFrame {
-	// DB ê´€ë ¨
+	// DB °ü·Ã
 	public static Connection makeConnection() {
 		String url = "jdbc:mariadb://localhost:3306/star_db";
 		Connection con = null;
@@ -14,9 +14,9 @@ public class Login extends JFrame {
 			Class.forName("org.mariadb.jdbc.Driver");
 			con = DriverManager.getConnection(url, "root", "password");
 		} catch (ClassNotFoundException e) {
-			System.err.println("ë“œë¼ì´ë²„ë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤");
+			System.err.println("µå¶óÀÌ¹ö¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù");
 		} catch (SQLException e) {
-			System.err.println("ì—°ê²°ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤");
+			System.err.println("¿¬°á¿¡ ½ÇÆĞÇß½À´Ï´Ù");
 		}
 		
 		return con;
@@ -24,7 +24,7 @@ public class Login extends JFrame {
 	Connection con = makeConnection();
 	Statement stmt = con.createStatement();
 	
-	// GUIì•ˆì—ì„œ ê³µí†µì ìœ¼ë¡œ ì“°ì¼ ìš”ì†Œë“¤ 
+	// GUI¾È¿¡¼­ °øÅëÀûÀ¸·Î ¾²ÀÏ ¿ä¼Òµé 
 	Font font = new Font("D2Cording", Font.BOLD, 20);
 	JPanel panel = new JPanel() {
 		ImageIcon i = new ImageIcon("img/Login.png");	
@@ -33,7 +33,7 @@ public class Login extends JFrame {
 		}
 	};
 	
-	// ë¡œê·¸ì¸ì°½ ê´€ë ¨ ìš”ì†Œ
+	// ·Î±×ÀÎÃ¢ °ü·Ã ¿ä¼Ò
 	JLabel login_idLabel = new JLabel("ID");
 	JLabel login_passwdLabel = new JLabel("Password");
 	JTextField login_id = new JTextField(10);
@@ -43,32 +43,32 @@ public class Login extends JFrame {
 	JButton login_alter = new JButton("Alter");
 	JLabel login_message = new JLabel();
 	
-	// íšŒì›ê°€ì…ì°½ ê´€ë ¨ ìš”ì†Œ
+	// È¸¿ø°¡ÀÔÃ¢ °ü·Ã ¿ä¼Ò
 	JLabel reg_idLabel = new JLabel("ID");
-	JLabel reg_passwdLabel = new JLabel("ë¹„ë°€ë²ˆí˜¸");
-	JLabel reg_passwdCheckLabel = new JLabel("ë¹„ë°€ë²ˆí˜¸ í™•ì¸");
+	JLabel reg_passwdLabel = new JLabel("ºñ¹Ğ¹øÈ£");
+	JLabel reg_passwdCheckLabel = new JLabel("ºñ¹Ğ¹øÈ£ È®ÀÎ");
 	JTextField reg_id = new JTextField(10);
 	JPasswordField reg_passwd = new JPasswordField(15);
 	JPasswordField reg_passwdCheck = new JPasswordField(15);
-	JButton reg_register = new JButton("íšŒì›ê°€ì…");
-	JButton reg_back = new JButton("ë’¤ë¡œ");
-	JLabel reg_message = new JLabel("ë¹„ë°€ë²ˆí˜¸ê°€ ì„œë¡œ ë‹¤ë¦…ë‹ˆë‹¤");
-	JButton reg_deleteAccount = new JButton("íšŒì›íƒˆí‡´");
+	JButton reg_register = new JButton("È¸¿ø°¡ÀÔ");
+	JButton reg_back = new JButton("µÚ·Î");
+	JLabel reg_message = new JLabel("ºñ¹Ğ¹øÈ£°¡ ¼­·Î ´Ù¸¨´Ï´Ù");
+	JButton reg_deleteAccount = new JButton("È¸¿øÅ»Åğ");
 	
-	// íšŒì›ì •ë³´ ìˆ˜ì •ì°½ ê´€ë ¨ ìš”ì†Œ
+	// È¸¿øÁ¤º¸ ¼öÁ¤Ã¢ °ü·Ã ¿ä¼Ò
 	JLabel alt_idLabel = new JLabel("ID");
-	JLabel alt_passwdLabel = new JLabel("ë¹„ë°€ë²ˆí˜¸");
-	JLabel alt_newPasswdLabel = new JLabel("ë°”ê¿€ ë¹„ë°€ë²ˆí˜¸");
-	JLabel alt_newPasswdCheckLabel = new JLabel("ë¹„ë°€ë²ˆí˜¸ í™•ì¸");
+	JLabel alt_passwdLabel = new JLabel("ºñ¹Ğ¹øÈ£");
+	JLabel alt_newPasswdLabel = new JLabel("¹Ù²Ü ºñ¹Ğ¹øÈ£");
+	JLabel alt_newPasswdCheckLabel = new JLabel("ºñ¹Ğ¹øÈ£ È®ÀÎ");
 	JTextField alt_id = new JTextField(10);
 	JPasswordField alt_passwd = new JPasswordField(15);
 	JPasswordField alt_newPasswd = new JPasswordField(15);
 	JPasswordField alt_newPasswdCheck = new JPasswordField(15);
-	JButton alt_register = new JButton("ë³€ê²½");
-	JButton alt_back = new JButton("ë’¤ë¡œ");
-	JLabel alt_message = new JLabel("ë¹„ë°€ë²ˆí˜¸ê°€ ì„œë¡œ ë‹¤ë¦…ë‹ˆë‹¤");
+	JButton alt_register = new JButton("º¯°æ");
+	JButton alt_back = new JButton("µÚ·Î");
+	JLabel alt_message = new JLabel("ºñ¹Ğ¹øÈ£°¡ ¼­·Î ´Ù¸¨´Ï´Ù");
 	
-	// ë©”ì¸í”„ë ˆì„ ìƒì„±/ì„¤ì •
+	// ¸ŞÀÎÇÁ·¹ÀÓ »ı¼º/¼³Á¤
 	public Login() throws SQLException {		
 		setTitle("Login");
 		setResizable(false);
@@ -82,8 +82,8 @@ public class Login extends JFrame {
 		add(panel);
 		
 		makeLoginComponents();
-		makeAlterComponents(); // ìƒì„±ë§Œ ë˜ê²Œ, ë³´ì´ì§€ëŠ” ì•Šê²Œ
-		makeRegisterComponents(); // ìƒì„±ë§Œ ë˜ê²Œ, ë³´ì´ì§€ëŠ” ì•Šê²Œ
+		makeAlterComponents(); // »ı¼º¸¸ µÇ°Ô, º¸ÀÌÁö´Â ¾Ê°Ô
+		makeRegisterComponents(); // »ı¼º¸¸ µÇ°Ô, º¸ÀÌÁö´Â ¾Ê°Ô
 	}
 	
 	private void makeLoginComponents() {
@@ -104,7 +104,7 @@ public class Login extends JFrame {
 		login_message.setBounds(0, 445, 450, 25);
 		login_message.setFont(font);
 		login_message.setForeground(Color.red);
-		login_message.setHorizontalAlignment(JLabel.CENTER); // ì¤‘ì•™ì •ë ¬
+		login_message.setHorizontalAlignment(JLabel.CENTER); // Áß¾ÓÁ¤·Ä
 		
 		panel.add(login_idLabel);
 		panel.add(login_id);
@@ -115,7 +115,7 @@ public class Login extends JFrame {
 		panel.add(login_message);
 		panel.add(login_alter);
 		
-		// í´ë¦­í•˜ë©´ login ë©”ì†Œë“œ ì•ˆì—ì„œ ì „ë¶€ ì²˜ë¦¬
+		// Å¬¸¯ÇÏ¸é login ¸Ş¼Òµå ¾È¿¡¼­ ÀüºÎ Ã³¸®
 		login_login.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -127,7 +127,7 @@ public class Login extends JFrame {
 	        }
 		});
 		
-		// í´ë¦­í•˜ë©´ register ì°½ìœ¼ë¡œ í™”ë©´ ë³€ê²½
+		// Å¬¸¯ÇÏ¸é register Ã¢À¸·Î È­¸é º¯°æ
 		login_register.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -136,7 +136,7 @@ public class Login extends JFrame {
 			}
 		});
 		
-		// í´ë¦­í•˜ë©´ Alterì°½ìœ¼ë¡œ í™”ë©´ ë³€ê²½
+		// Å¬¸¯ÇÏ¸é AlterÃ¢À¸·Î È­¸é º¯°æ
 		login_alter.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				hideLoginPage();
@@ -171,8 +171,8 @@ public class Login extends JFrame {
 		reg_message.setForeground(Color.red);
 		
 		
-		// Register ë²„íŠ¼ ëˆŒëŸ¬ì•¼ ë³´ì´ë„ë¡ í•˜ê¸° ìœ„í•´ì„œ ì „ë¶€ ì•ˆë³´ì´ê²Œ
-		// ë²„íŠ¼ ëˆŒëŸ¬ì•¼ ìƒì„±ë˜ê²Œ ë§Œë“œë‹ˆ backí–ˆë‹¤ê°€ ë‹¤ì‹œ Register ëˆ„ë¥´ë©´ ì‘ë™ ì•ˆë¨
+		// Register ¹öÆ° ´­·¯¾ß º¸ÀÌµµ·Ï ÇÏ±â À§ÇØ¼­ ÀüºÎ ¾Èº¸ÀÌ°Ô
+		// ¹öÆ° ´­·¯¾ß »ı¼ºµÇ°Ô ¸¸µå´Ï backÇß´Ù°¡ ´Ù½Ã Register ´©¸£¸é ÀÛµ¿ ¾ÈµÊ
 		hideRegPage();
 		
 		panel.add(reg_idLabel);
@@ -186,29 +186,29 @@ public class Login extends JFrame {
 		panel.add(reg_message);
 		panel.add(reg_deleteAccount);
 		
-		// ê°€ì… ì‹œ ë°œìƒ ê°€ëŠ¥í•œ ì˜¤ë¥˜ëŠ” 1.ì•„ì´ë”” ì¤‘ë³µ   2.ë¹„ë°€ë²ˆí˜¸ë‘ ë¹„ë°€ë²ˆí˜¸ í™•ì¸ ë‹¤ë¦„
+		// °¡ÀÔ ½Ã ¹ß»ı °¡´ÉÇÑ ¿À·ù´Â 1.¾ÆÀÌµğ Áßº¹   2.ºñ¹Ğ¹øÈ£¶û ºñ¹Ğ¹øÈ£ È®ÀÎ ´Ù¸§
 		reg_register.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if ((reg_passwd.getText().equals(reg_passwdCheck.getText()))) {
 					try {
 						register(con, stmt, reg_id.getText(), reg_passwd.getText());
-//						login_message.setText("íšŒì›ê°€ì…ì´ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.");
+//						login_message.setText("È¸¿ø°¡ÀÔÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù.");
 					} catch (SQLException e1) {
-						// 1ë²ˆ ì˜¤ë¥˜ ì²˜ë¦¬
-						login_message.setText("ì¤‘ë³µëœ IDì…ë‹ˆë‹¤.");
+						// 1¹ø ¿À·ù Ã³¸®
+						login_message.setText("Áßº¹µÈ IDÀÔ´Ï´Ù.");
 					}
 					hideRegPage();
 					showLoginPage();
 				}
 				else { 
-					// 2ë²ˆ ì˜¤ë¥˜ ì²˜ë¦¬
+					// 2¹ø ¿À·ù Ã³¸®
 					reg_message.setVisible(true);
 				}
 	        }
 		});
 		
-		// ê·¸ëƒ¥ ì›ë˜ í™”ë©´ìœ¼ë¡œ ëŒì•„ê°€ê¸°
+		// ±×³É ¿ø·¡ È­¸éÀ¸·Î µ¹¾Æ°¡±â
 		reg_back.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -217,7 +217,7 @@ public class Login extends JFrame {
 	        }
 		});
 		
-		// ê³„ì • ì‚­ì œ ì‹œ ë°œìƒ ê°€ëŠ¥í•œ ì˜¤ë¥˜ëŠ” 1.ì—†ëŠ” ì•„ì´ë”” ì‚­ì œ   2.ë¹„ë°€ë²ˆí˜¸ë‘ ë¹„ë°€ë²ˆí˜¸ í™•ì¸ ë‹¤ë¦„   3.ë¹„ë°€ë²ˆí˜¸ í‹€ë¦¼
+		// °èÁ¤ »èÁ¦ ½Ã ¹ß»ı °¡´ÉÇÑ ¿À·ù´Â 1.¾ø´Â ¾ÆÀÌµğ »èÁ¦   2.ºñ¹Ğ¹øÈ£¶û ºñ¹Ğ¹øÈ£ È®ÀÎ ´Ù¸§   3.ºñ¹Ğ¹øÈ£ Æ²¸²
 		reg_deleteAccount.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -228,13 +228,13 @@ public class Login extends JFrame {
 						hideRegPage();
 						showLoginPage();
 					} catch (SQLException e1) {
-						// 1ë²ˆ ì˜¤ë¥˜ ì²˜ë¦¬... í•˜ê³  ì‹¶ì—ˆì§€ë§Œ ì—†ëŠ” ì•„ì´ë”” ì‚­ì œí•œë‹¤ê³  ì—ëŸ¬ê°€ ë°œìƒí•˜ì§„ ì•Šì•„ì„œ ì‘ë™ ì•ˆë¨
-						// ê·¸ë˜ì„œ deleteAccount ë©”ì†Œë“œì—ì„œ 1ë²ˆ ì˜¤ë¥˜ ì²˜ë¦¬
-						// reg_message.setText("ì¡´ì¬í•˜ì§€ ì•ŠëŠ” IDì…ë‹ˆë‹¤.");
+						// 1¹ø ¿À·ù Ã³¸®... ÇÏ°í ½Í¾úÁö¸¸ ¾ø´Â ¾ÆÀÌµğ »èÁ¦ÇÑ´Ù°í ¿¡·¯°¡ ¹ß»ıÇÏÁø ¾Ê¾Æ¼­ ÀÛµ¿ ¾ÈµÊ
+						// ±×·¡¼­ deleteAccount ¸Ş¼Òµå¿¡¼­ 1¹ø ¿À·ù Ã³¸®
+						// reg_message.setText("Á¸ÀçÇÏÁö ¾Ê´Â IDÀÔ´Ï´Ù.");
 					}
 				}
 				else { 
-					// 2ë²ˆ ì˜¤ë¥˜ ì²˜ë¦¬
+					// 2¹ø ¿À·ù Ã³¸®
 					reg_message.setVisible(true);
 				}
 	        }
@@ -272,8 +272,8 @@ public class Login extends JFrame {
 		alt_message.setForeground(Color.red);
 		alt_message.setVisible(false);
 		
-		// Alter ë²„íŠ¼ ëˆŒëŸ¬ì•¼ ë³´ì´ë„ë¡ í•˜ê¸° ìœ„í•´ì„œ ì „ë¶€ ì•ˆë³´ì´ê²Œ
-		// ë²„íŠ¼ ëˆŒëŸ¬ì•¼ ìƒì„±ë˜ê²Œ ë§Œë“œë‹ˆ backí–ˆë‹¤ê°€ ë‹¤ì‹œ Alter ëˆ„ë¥´ë©´ ì‘ë™ ì•ˆë¨
+		// Alter ¹öÆ° ´­·¯¾ß º¸ÀÌµµ·Ï ÇÏ±â À§ÇØ¼­ ÀüºÎ ¾Èº¸ÀÌ°Ô
+		// ¹öÆ° ´­·¯¾ß »ı¼ºµÇ°Ô ¸¸µå´Ï backÇß´Ù°¡ ´Ù½Ã Alter ´©¸£¸é ÀÛµ¿ ¾ÈµÊ
 		hideAltPage();
 		
 		panel.add(alt_idLabel);
@@ -288,7 +288,7 @@ public class Login extends JFrame {
 		panel.add(alt_back);
 		panel.add(alt_message);
 		
-		// ì •ë³´ ìˆ˜ì • ì‹œ ë°œìƒ ê°€ëŠ¥í•œ ì˜¤ë¥˜ëŠ” 1.ë¹„ë°€ë²ˆí˜¸ í‹€ë¦¼   2.ì—†ëŠ” ì•„ì´ë””ë¡œ ë¡œê·¸ì¸   3.ë¹„ë°€ë²ˆí˜¸ í™•ì¸ í‹€ë¦¼
+		// Á¤º¸ ¼öÁ¤ ½Ã ¹ß»ı °¡´ÉÇÑ ¿À·ù´Â 1.ºñ¹Ğ¹øÈ£ Æ²¸²   2.¾ø´Â ¾ÆÀÌµğ·Î ·Î±×ÀÎ   3.ºñ¹Ğ¹øÈ£ È®ÀÎ Æ²¸²
 		alt_register.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -299,8 +299,8 @@ public class Login extends JFrame {
 						e1.printStackTrace();
 					}
 				} else {
-					// 3ë²ˆ ì˜¤ë¥˜ ì²˜ë¦¬
-					alt_message.setText("ì˜ëª»ëœ ë¹„ë°€ë²ˆí˜¸ì…ë‹ˆë‹¤ (ë¹„ë°€ë²ˆí˜¸ í™•ì¸)");
+					// 3¹ø ¿À·ù Ã³¸®
+					alt_message.setText("Àß¸øµÈ ºñ¹Ğ¹øÈ£ÀÔ´Ï´Ù (ºñ¹Ğ¹øÈ£ È®ÀÎ)");
 					alt_message.setVisible(true);
 				}
 				
@@ -315,7 +315,7 @@ public class Login extends JFrame {
 			}
 		});
 	}
-	// ë¡œê·¸ì¸ ì‹œ ë°œìƒ ê°€ëŠ¥í•œ ì˜¤ë¥˜ëŠ” 1.ë¹„ë°€ë²ˆí˜¸ í‹€ë¦¼   2.ì—†ëŠ” ì•„ì´ë””ë¡œ ë¡œê·¸ì¸
+	// ·Î±×ÀÎ ½Ã ¹ß»ı °¡´ÉÇÑ ¿À·ù´Â 1.ºñ¹Ğ¹øÈ£ Æ²¸²   2.¾ø´Â ¾ÆÀÌµğ·Î ·Î±×ÀÎ
 	private void login(Connection con, Statement stmt, String id, String password) throws SQLException {
 		String s = "select password from star_login where id = '" + id + "'";
 		ResultSet rs = stmt.executeQuery(s);
@@ -324,22 +324,22 @@ public class Login extends JFrame {
 			if (rs.getString("password").equals(password)) {
 				setVisible(false);
 				StarUI User = new StarUI(0, "User");
-					// 1ë²ˆ ì˜¤ë¥˜ ì²˜ë¦¬
-			} else { login_message.setText("ì˜ëª»ëœ ë¹„ë°€ë²ˆí˜¸ì…ë‹ˆë‹¤."); }
+					// 1¹ø ¿À·ù Ã³¸®
+			} else { login_message.setText("Àß¸øµÈ ºñ¹Ğ¹øÈ£ÀÔ´Ï´Ù."); }
 		}
 		else {
-			// 2ë²ˆ ì˜¤ë¥˜ ì²˜ë¦¬
-			login_message.setText("ì¡´ì¬í•˜ì§€ ì•ŠëŠ” IDì…ë‹ˆë‹¤.");
+			// 2¹ø ¿À·ù Ã³¸®
+			login_message.setText("Á¸ÀçÇÏÁö ¾Ê´Â IDÀÔ´Ï´Ù.");
 		}
 	}	
 	private void register(Connection con, Statement stmt, String id, String password) throws SQLException {
 		if (id.equals("") || password.equals("")) {
-			login_message.setText("ë¹ˆ ê°’ì€ ì…ë ¥í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤");
+			login_message.setText("ºó °ªÀº ÀÔ·ÂÇÒ ¼ö ¾ø½À´Ï´Ù");
 		}
 		else {
 			String s = "insert into star_login (id, password) values ('" + id + "', '" + password + "');";
 			stmt.executeUpdate(s);
-			login_message.setText("íšŒì›ê°€ì…ì´ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.");
+			login_message.setText("È¸¿ø°¡ÀÔÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù.");
 		}
 		
 	}	
@@ -347,14 +347,14 @@ public class Login extends JFrame {
 		String s = "select password from star_login where id = '" + id + "'";
 		ResultSet rs = stmt.executeQuery(s);
 
-		if (!(rs.next())) { login_message.setText("ì¡´ì¬í•˜ì§€ ì•ŠëŠ” IDì…ë‹ˆë‹¤."); }
+		if (!(rs.next())) { login_message.setText("Á¸ÀçÇÏÁö ¾Ê´Â IDÀÔ´Ï´Ù."); }
 		else if (rs.getString("password").equals(password)) {
 			String s1 = "delete from star_login where id = '" + id + "';";
 			stmt.executeUpdate(s1);
-			login_message.setText("íšŒì›íƒˆí‡´ê°€ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.");
+			login_message.setText("È¸¿øÅ»Åğ°¡ ¿Ï·áµÇ¾ú½À´Ï´Ù.");
 		}
 		else {
-			login_message.setText("ì˜ëª»ëœ ë¹„ë°€ë²ˆí˜¸ì…ë‹ˆë‹¤.");
+			login_message.setText("Àß¸øµÈ ºñ¹Ğ¹øÈ£ÀÔ´Ï´Ù.");
 		}
 		
 	}	
@@ -368,15 +368,15 @@ public class Login extends JFrame {
 				stmt.executeUpdate(s1);
 				hideAltPage();
 				showLoginPage();
-				login_message.setText("ë¹„ë°€ë²ˆí˜¸ ë³€ê²½ì´ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤");
+				login_message.setText("ºñ¹Ğ¹øÈ£ º¯°æÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù");
 			} else {
-				// 1ë²ˆ ì˜¤ë¥˜ ì²˜ë¦¬
-				alt_message.setText("ì˜ëª»ëœ ë¹„ë°€ë²ˆí˜¸ì…ë‹ˆë‹¤. (ë¡œê·¸ì¸ ì‹¤íŒ¨)");
+				// 1¹ø ¿À·ù Ã³¸®
+				alt_message.setText("Àß¸øµÈ ºñ¹Ğ¹øÈ£ÀÔ´Ï´Ù. (·Î±×ÀÎ ½ÇÆĞ)");
 				alt_message.setVisible(true);
 			}
 		} else {
-			// 2ë²ˆ ì˜¤ë¥˜ ì²˜ë¦¬
-			alt_message.setText("ì¡´ì¬í•˜ì§€ ì•ŠëŠ” IDì…ë‹ˆë‹¤.");
+			// 2¹ø ¿À·ù Ã³¸®
+			alt_message.setText("Á¸ÀçÇÏÁö ¾Ê´Â IDÀÔ´Ï´Ù.");
 			alt_message.setVisible(true);
 		}
 	}
