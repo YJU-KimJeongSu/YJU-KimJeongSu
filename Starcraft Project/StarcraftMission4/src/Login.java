@@ -5,7 +5,7 @@ import java.sql.*;
 import javax.swing.*;
 
 public class Login extends JFrame {
-	// DB ê´€ë ¨
+	// DB °ü·Ã ÇÊµåº¯¼öµé
 	public static Connection makeConnection() {
 		String url = "jdbc:mariadb://localhost:3306/star_db";
 		Connection con = null;
@@ -14,9 +14,9 @@ public class Login extends JFrame {
 			Class.forName("org.mariadb.jdbc.Driver");
 			con = DriverManager.getConnection(url, "root", "password");
 		} catch (ClassNotFoundException e) {
-			System.err.println("ë“œë¼ì´ë²„ë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤");
+			System.err.println("µå¶óÀÌ¹ö¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù");
 		} catch (SQLException e) {
-			System.err.println("ì—°ê²°ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤");
+			System.err.println("¿¬°á¿¡ ½ÇÆĞÇß½À´Ï´Ù");
 		}
 		
 		return con;
@@ -24,7 +24,7 @@ public class Login extends JFrame {
 	Connection con = makeConnection();
 	Statement stmt = con.createStatement();
 	
-	// GUIì•ˆì—ì„œ ê³µí†µì ìœ¼ë¡œ ì“°ì¼ ìš”ì†Œë“¤ 
+	// GUI¾È¿¡¼­ °øÅëÀûÀ¸·Î ¾²ÀÏ ¿ä¼Òµé 
 	Font font = new Font("D2Cording", Font.BOLD, 20);
 	JPanel panel = new JPanel() {
 		ImageIcon i = new ImageIcon("img/Login.png");	
@@ -33,42 +33,28 @@ public class Login extends JFrame {
 		}
 	};
 	
-	// ë¡œê·¸ì¸ì°½ ê´€ë ¨ ìš”ì†Œ
+	// ·Î±×ÀÎÃ¢ °ü·Ã ¿ä¼Ò
 	JLabel login_idLabel = new JLabel("ID");
 	JLabel login_passwdLabel = new JLabel("Password");
 	JTextField login_id = new JTextField(10);
 	JPasswordField login_passwd = new JPasswordField(15);
 	JButton login_login = new JButton("Login");
 	JButton login_register = new JButton("Register");
-	JButton login_alter = new JButton("Alter");
 	JLabel login_message = new JLabel();
 	
-	// íšŒì›ê°€ì…ì°½ ê´€ë ¨ ìš”ì†Œ
+	// È¸¿ø°¡ÀÔÃ¢ °ü·Ã ¿ä¼Ò
 	JLabel reg_idLabel = new JLabel("ID");
-	JLabel reg_passwdLabel = new JLabel("ë¹„ë°€ë²ˆí˜¸");
-	JLabel reg_passwdCheckLabel = new JLabel("ë¹„ë°€ë²ˆí˜¸ í™•ì¸");
+	JLabel reg_passwdLabel = new JLabel("ºñ¹Ğ¹øÈ£");
+	JLabel reg_passwdCheckLabel = new JLabel("ºñ¹Ğ¹øÈ£ È®ÀÎ");
 	JTextField reg_id = new JTextField(10);
 	JPasswordField reg_passwd = new JPasswordField(15);
 	JPasswordField reg_passwdCheck = new JPasswordField(15);
-	JButton reg_register = new JButton("íšŒì›ê°€ì…");
-	JButton reg_back = new JButton("ë’¤ë¡œ");
-	JLabel reg_message = new JLabel("ë¹„ë°€ë²ˆí˜¸ê°€ ì„œë¡œ ë‹¤ë¦…ë‹ˆë‹¤");
-	JButton reg_deleteAccount = new JButton("íšŒì›íƒˆí‡´");
+	JButton reg_register = new JButton("È¸¿ø°¡ÀÔ");
+	JButton reg_back = new JButton("µÚ·Î");
+	JLabel reg_message = new JLabel("ºñ¹Ğ¹øÈ£°¡ ¼­·Î ´Ù¸¨´Ï´Ù");
+	JButton reg_deleteAccount = new JButton("È¸¿øÅ»Åğ");
 	
-	// íšŒì›ì •ë³´ ìˆ˜ì •ì°½ ê´€ë ¨ ìš”ì†Œ
-	JLabel alt_idLabel = new JLabel("ID");
-	JLabel alt_passwdLabel = new JLabel("ë¹„ë°€ë²ˆí˜¸");
-	JLabel alt_newPasswdLabel = new JLabel("ë°”ê¿€ ë¹„ë°€ë²ˆí˜¸");
-	JLabel alt_newPasswdCheckLabel = new JLabel("ë¹„ë°€ë²ˆí˜¸ í™•ì¸");
-	JTextField alt_id = new JTextField(10);
-	JPasswordField alt_passwd = new JPasswordField(15);
-	JPasswordField alt_newPasswd = new JPasswordField(15);
-	JPasswordField alt_newPasswdCheck = new JPasswordField(15);
-	JButton alt_register = new JButton("ë³€ê²½");
-	JButton alt_back = new JButton("ë’¤ë¡œ");
-	JLabel alt_message = new JLabel("ë¹„ë°€ë²ˆí˜¸ê°€ ì„œë¡œ ë‹¤ë¦…ë‹ˆë‹¤");
-	
-	// ë©”ì¸í”„ë ˆì„ ìƒì„±/ì„¤ì •
+	// ¸ŞÀÎÇÁ·¹ÀÓ »ı¼º/¼³Á¤
 	public Login() throws SQLException {		
 		setTitle("Login");
 		setResizable(false);
@@ -82,8 +68,7 @@ public class Login extends JFrame {
 		add(panel);
 		
 		makeLoginComponents();
-		makeAlterComponents(); // ìƒì„±ë§Œ ë˜ê²Œ, ë³´ì´ì§€ëŠ” ì•Šê²Œ
-		makeRegisterComponents(); // ìƒì„±ë§Œ ë˜ê²Œ, ë³´ì´ì§€ëŠ” ì•Šê²Œ
+		makeRegisterComponents(); // »ı¼º¸¸ µÇ°Ô, º¸ÀÌÁö´Â ¾Ê°Ô
 	}
 	
 	private void makeLoginComponents() {
@@ -99,12 +84,11 @@ public class Login extends JFrame {
 		
 		login_login.setBounds(175, 325, 100, 25);
 		login_register.setBounds(175, 365, 100, 25);
-		login_alter.setBounds(175, 405, 100, 25);
 
-		login_message.setBounds(0, 445, 450, 25);
+		login_message.setBounds(0, 415, 450, 25);
 		login_message.setFont(font);
 		login_message.setForeground(Color.red);
-		login_message.setHorizontalAlignment(JLabel.CENTER); // ì¤‘ì•™ì •ë ¬
+		login_message.setHorizontalAlignment(JLabel.CENTER); // Áß¾ÓÁ¤·Ä
 		
 		panel.add(login_idLabel);
 		panel.add(login_id);
@@ -113,9 +97,8 @@ public class Login extends JFrame {
 		panel.add(login_login);
 		panel.add(login_register);
 		panel.add(login_message);
-		panel.add(login_alter);
 		
-		// í´ë¦­í•˜ë©´ login ë©”ì†Œë“œ ì•ˆì—ì„œ ì „ë¶€ ì²˜ë¦¬
+		// Å¬¸¯ÇÏ¸é login ¸Ş¼Òµå ¾È¿¡¼­ ÀüºÎ Ã³¸®
 		login_login.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -127,24 +110,32 @@ public class Login extends JFrame {
 	        }
 		});
 		
-		// í´ë¦­í•˜ë©´ register ì°½ìœ¼ë¡œ í™”ë©´ ë³€ê²½
+		// Å¬¸¯ÇÏ¸é register Ã¢À¸·Î È­¸é º¯°æ
 		login_register.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				hideLoginPage();
-				showRegPage();
-			}
-		});
-		
-		// í´ë¦­í•˜ë©´ Alterì°½ìœ¼ë¡œ í™”ë©´ ë³€ê²½
-		login_alter.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				hideLoginPage();
-				showAltPage();
+				login_idLabel.setVisible(false);
+				login_id.setVisible(false);
+				login_passwdLabel.setVisible(false);
+				login_passwd.setVisible(false);
+				login_login.setVisible(false);
+				login_register.setVisible(false);
+				login_message.setVisible(false);
+				login_message.setText("");
+				
+				reg_idLabel.setVisible(true);
+				reg_id.setVisible(true);
+				reg_passwdLabel.setVisible(true);
+				reg_passwd.setVisible(true);
+				reg_passwdCheckLabel.setVisible(true);
+				reg_passwdCheck.setVisible(true);
+				reg_register.setVisible(true);
+				reg_back.setVisible(true);
+				reg_deleteAccount.setVisible(true);
 			}
 		});
 	}	
-	private void makeRegisterComponents() {
+	private void  makeRegisterComponents() {
 		reg_idLabel.setBounds(150, 205, 100, 20);
 		reg_idLabel.setFont(font);
 		reg_idLabel.setForeground(Color.white);
@@ -171,9 +162,18 @@ public class Login extends JFrame {
 		reg_message.setForeground(Color.red);
 		
 		
-		// Register ë²„íŠ¼ ëˆŒëŸ¬ì•¼ ë³´ì´ë„ë¡ í•˜ê¸° ìœ„í•´ì„œ ì „ë¶€ ì•ˆë³´ì´ê²Œ
-		// ë²„íŠ¼ ëˆŒëŸ¬ì•¼ ìƒì„±ë˜ê²Œ ë§Œë“œë‹ˆ backí–ˆë‹¤ê°€ ë‹¤ì‹œ Register ëˆ„ë¥´ë©´ ì‘ë™ ì•ˆë¨
-		hideRegPage();
+		// Register ¹öÆ° ´­·¯¾ß º¸ÀÌµµ·Ï ÇÏ±â À§ÇØ¼­ ÀüºÎ ¾Èº¸ÀÌ°Ô
+		// ¹öÆ° ´­·¯¾ß »ı¼ºµÇ°Ô ¸¸µå´Ï backÇß´Ù°¡ ´Ù½Ã Register ´©¸£¸é ÀÛµ¿ ¾ÈµÊ
+		reg_idLabel.setVisible(false);
+		reg_id.setVisible(false);
+		reg_passwdLabel.setVisible(false);
+		reg_passwd.setVisible(false);
+		reg_passwdCheckLabel.setVisible(false);
+		reg_passwdCheck.setVisible(false);
+		reg_register.setVisible(false);
+		reg_back.setVisible(false);
+		reg_message.setVisible(false);
+		reg_deleteAccount.setVisible(false);
 		
 		panel.add(reg_idLabel);
 		panel.add(reg_id);
@@ -186,38 +186,70 @@ public class Login extends JFrame {
 		panel.add(reg_message);
 		panel.add(reg_deleteAccount);
 		
-		// ê°€ì… ì‹œ ë°œìƒ ê°€ëŠ¥í•œ ì˜¤ë¥˜ëŠ” 1.ì•„ì´ë”” ì¤‘ë³µ   2.ë¹„ë°€ë²ˆí˜¸ë‘ ë¹„ë°€ë²ˆí˜¸ í™•ì¸ ë‹¤ë¦„
+		// °¡ÀÔ ½Ã ¹ß»ı °¡´ÉÇÑ ¿À·ù´Â 1.¾ÆÀÌµğ Áßº¹   2.ºñ¹Ğ¹øÈ£¶û ºñ¹Ğ¹øÈ£ È®ÀÎ ´Ù¸§
 		reg_register.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if ((reg_passwd.getText().equals(reg_passwdCheck.getText()))) {
 					try {
+						// register ¸Ş¼Òµå ¾È¿¡ ¿À·ù °ËÃâ ±â´É ¾øÀ½
 						register(con, stmt, reg_id.getText(), reg_passwd.getText());
-//						login_message.setText("íšŒì›ê°€ì…ì´ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.");
 					} catch (SQLException e1) {
-						// 1ë²ˆ ì˜¤ë¥˜ ì²˜ë¦¬
-						login_message.setText("ì¤‘ë³µëœ IDì…ë‹ˆë‹¤.");
+						// 1¹ø ¿À·ù Ã³¸®
+						login_message.setText("Áßº¹µÈ IDÀÔ´Ï´Ù.");
 					}
-					hideRegPage();
-					showLoginPage();
+					reg_idLabel.setVisible(false);
+					reg_id.setVisible(false);
+					reg_passwdLabel.setVisible(false);
+					reg_passwd.setVisible(false);
+					reg_passwdCheckLabel.setVisible(false);
+					reg_passwdCheck.setVisible(false);
+					reg_register.setVisible(false);
+					reg_back.setVisible(false);
+					reg_message.setVisible(false);
+					reg_deleteAccount.setVisible(false);
+					
+					login_idLabel.setVisible(true);
+					login_id.setVisible(true);
+					login_passwdLabel.setVisible(true);
+					login_passwd.setVisible(true);
+					login_login.setVisible(true);
+					login_register.setVisible(true);
+					login_message.setVisible(true);
 				}
 				else { 
-					// 2ë²ˆ ì˜¤ë¥˜ ì²˜ë¦¬
+					// 2¹ø ¿À·ù Ã³¸®
 					reg_message.setVisible(true);
 				}
 	        }
 		});
 		
-		// ê·¸ëƒ¥ ì›ë˜ í™”ë©´ìœ¼ë¡œ ëŒì•„ê°€ê¸°
+		// ±×³É ¿ø·¡ È­¸éÀ¸·Î µ¹¾Æ°¡±â
 		reg_back.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				hideRegPage();
-				showLoginPage();
+				reg_idLabel.setVisible(false);
+				reg_id.setVisible(false);
+				reg_passwdLabel.setVisible(false);
+				reg_passwd.setVisible(false);
+				reg_passwdCheckLabel.setVisible(false);
+				reg_passwdCheck.setVisible(false);
+				reg_register.setVisible(false);
+				reg_back.setVisible(false);
+				reg_message.setVisible(false);
+				reg_deleteAccount.setVisible(false);
+				
+				login_idLabel.setVisible(true);
+				login_id.setVisible(true);
+				login_passwdLabel.setVisible(true);
+				login_passwd.setVisible(true);
+				login_login.setVisible(true);
+				login_register.setVisible(true);
+				login_message.setVisible(true);
 	        }
 		});
 		
-		// ê³„ì • ì‚­ì œ ì‹œ ë°œìƒ ê°€ëŠ¥í•œ ì˜¤ë¥˜ëŠ” 1.ì—†ëŠ” ì•„ì´ë”” ì‚­ì œ   2.ë¹„ë°€ë²ˆí˜¸ë‘ ë¹„ë°€ë²ˆí˜¸ í™•ì¸ ë‹¤ë¦„   3.ë¹„ë°€ë²ˆí˜¸ í‹€ë¦¼
+		// °èÁ¤ »èÁ¦ ½Ã ¹ß»ı °¡´ÉÇÑ ¿À·ù´Â 1.¾ø´Â ¾ÆÀÌµğ »èÁ¦   2.ºñ¹Ğ¹øÈ£¶û ºñ¹Ğ¹øÈ£ È®ÀÎ ´Ù¸§
 		reg_deleteAccount.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -225,97 +257,38 @@ public class Login extends JFrame {
 					try {
 						deleteAccount(con, stmt, reg_id.getText(), reg_passwd.getText());
 						
-						hideRegPage();
-						showLoginPage();
+						reg_idLabel.setVisible(false);
+						reg_id.setVisible(false);
+						reg_passwdLabel.setVisible(false);
+						reg_passwd.setVisible(false);
+						reg_passwdCheckLabel.setVisible(false);
+						reg_passwdCheck.setVisible(false);
+						reg_register.setVisible(false);
+						reg_back.setVisible(false);
+						reg_message.setVisible(false);
+						reg_deleteAccount.setVisible(false);
+
+						login_idLabel.setVisible(true);
+						login_id.setVisible(true);
+						login_passwdLabel.setVisible(true);
+						login_passwd.setVisible(true);
+						login_login.setVisible(true);
+						login_register.setVisible(true);
+						login_message.setVisible(true);
 					} catch (SQLException e1) {
-						// 1ë²ˆ ì˜¤ë¥˜ ì²˜ë¦¬... í•˜ê³  ì‹¶ì—ˆì§€ë§Œ ì—†ëŠ” ì•„ì´ë”” ì‚­ì œí•œë‹¤ê³  ì—ëŸ¬ê°€ ë°œìƒí•˜ì§„ ì•Šì•„ì„œ ì‘ë™ ì•ˆë¨
-						// ê·¸ë˜ì„œ deleteAccount ë©”ì†Œë“œì—ì„œ 1ë²ˆ ì˜¤ë¥˜ ì²˜ë¦¬
-						// reg_message.setText("ì¡´ì¬í•˜ì§€ ì•ŠëŠ” IDì…ë‹ˆë‹¤.");
+						// 1¹ø ¿À·ù Ã³¸®... ÇÏ°í ½Í¾úÁö¸¸ ¾ø´Â ¾ÆÀÌµğ »èÁ¦ÇÑ´Ù°í ¿¡·¯°¡ ¹ß»ıÇÏÁø ¾Ê¾Æ¼­ ÀÛµ¿ ¾ÈµÊ
+						// ±×·¡¼­ deleteAccount ¸Ş¼Òµå¿¡¼­ 1¹ø ¿À·ù Ã³¸®
+						// reg_message.setText("Á¸ÀçÇÏÁö ¾Ê´Â IDÀÔ´Ï´Ù.");
 					}
 				}
 				else { 
-					// 2ë²ˆ ì˜¤ë¥˜ ì²˜ë¦¬
+					// 2¹ø ¿À·ù Ã³¸®
 					reg_message.setVisible(true);
 				}
 	        }
 		});
 	}
-	private void makeAlterComponents() {
-		alt_idLabel.setBounds(150, 205, 100, 20);
-		alt_idLabel.setFont(font);
-		alt_idLabel.setForeground(Color.white);
-		alt_id.setBounds(200, 205, 100, 20);
-		
-		alt_passwdLabel.setBounds(0, 245, 170, 20);
-		alt_passwdLabel.setFont(font);
-		alt_passwdLabel.setForeground(Color.white);
-		alt_passwdLabel.setHorizontalAlignment(JLabel.RIGHT);
-		alt_passwd.setBounds(200, 245, 100, 20);
-		
-		alt_newPasswdLabel.setBounds(0, 285, 170, 20);
-		alt_newPasswdLabel.setFont(font);
-		alt_newPasswdLabel.setForeground(Color.white);
-		alt_newPasswdLabel.setHorizontalAlignment(JLabel.RIGHT);
-		alt_newPasswd.setBounds(200, 285, 100, 20);
-		
-		alt_newPasswdCheckLabel.setBounds(0, 325, 170, 20);
-		alt_newPasswdCheckLabel.setFont(font);
-		alt_newPasswdCheckLabel.setForeground(Color.white);
-		alt_newPasswdCheckLabel.setHorizontalAlignment(JLabel.RIGHT);
-		alt_newPasswdCheck.setBounds(200, 325, 100, 20);
-		
-		alt_register.setBounds(175, 375, 100, 25);
-		alt_back.setBounds(175, 415, 100, 25);
-		alt_message.setBounds(0, 455, 450, 25);
-		alt_message.setHorizontalAlignment(JLabel.CENTER);
-		alt_message.setFont(font);
-		alt_message.setForeground(Color.red);
-		alt_message.setVisible(false);
-		
-		// Alter ë²„íŠ¼ ëˆŒëŸ¬ì•¼ ë³´ì´ë„ë¡ í•˜ê¸° ìœ„í•´ì„œ ì „ë¶€ ì•ˆë³´ì´ê²Œ
-		// ë²„íŠ¼ ëˆŒëŸ¬ì•¼ ìƒì„±ë˜ê²Œ ë§Œë“œë‹ˆ backí–ˆë‹¤ê°€ ë‹¤ì‹œ Alter ëˆ„ë¥´ë©´ ì‘ë™ ì•ˆë¨
-		hideAltPage();
-		
-		panel.add(alt_idLabel);
-		panel.add(alt_id);
-		panel.add(alt_passwdLabel);
-		panel.add(alt_passwd);
-		panel.add(alt_newPasswdLabel);
-		panel.add(alt_newPasswd);
-		panel.add(alt_newPasswdCheckLabel);
-		panel.add(alt_newPasswdCheck);
-		panel.add(alt_register);
-		panel.add(alt_back);
-		panel.add(alt_message);
-		
-		// ì •ë³´ ìˆ˜ì • ì‹œ ë°œìƒ ê°€ëŠ¥í•œ ì˜¤ë¥˜ëŠ” 1.ë¹„ë°€ë²ˆí˜¸ í‹€ë¦¼   2.ì—†ëŠ” ì•„ì´ë””ë¡œ ë¡œê·¸ì¸   3.ë¹„ë°€ë²ˆí˜¸ í™•ì¸ í‹€ë¦¼
-		alt_register.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (alt_newPasswd.getText().equals(alt_newPasswdCheck.getText())) {
-					try {
-						alterAccount(con, stmt, alt_id.getText(), alt_passwd.getText(), alt_newPasswd.getText());
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
-				} else {
-					// 3ë²ˆ ì˜¤ë¥˜ ì²˜ë¦¬
-					alt_message.setText("ì˜ëª»ëœ ë¹„ë°€ë²ˆí˜¸ì…ë‹ˆë‹¤ (ë¹„ë°€ë²ˆí˜¸ í™•ì¸)");
-					alt_message.setVisible(true);
-				}
-				
-			}
-		});
-		
-		alt_back.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				hideAltPage();
-				showLoginPage();
-			}
-		});
-	}
-	// ë¡œê·¸ì¸ ì‹œ ë°œìƒ ê°€ëŠ¥í•œ ì˜¤ë¥˜ëŠ” 1.ë¹„ë°€ë²ˆí˜¸ í‹€ë¦¼   2.ì—†ëŠ” ì•„ì´ë””ë¡œ ë¡œê·¸ì¸
+	// ·Î±×ÀÎ ½Ã ¹ß»ı °¡´ÉÇÑ ¿À·ù´Â 1.ºñ¹Ğ¹øÈ£ Æ²¸²   2.¾ø´Â ¾ÆÀÌµğ·Î ·Î±×ÀÎ
 	private void login(Connection con, Statement stmt, String id, String password) throws SQLException {
 		String s = "select password from star_login where id = '" + id + "'";
 		ResultSet rs = stmt.executeQuery(s);
@@ -324,129 +297,28 @@ public class Login extends JFrame {
 			if (rs.getString("password").equals(password)) {
 				setVisible(false);
 				StarUI User = new StarUI(0, "User");
-					// 1ë²ˆ ì˜¤ë¥˜ ì²˜ë¦¬
-			} else { login_message.setText("ì˜ëª»ëœ ë¹„ë°€ë²ˆí˜¸ì…ë‹ˆë‹¤."); }
+					// 1¹ø ¿À·ù Ã³¸®
+			} else { login_message.setText("Àß¸øµÈ ºñ¹Ğ¹øÈ£ÀÔ´Ï´Ù."); }
 		}
 		else {
-			// 2ë²ˆ ì˜¤ë¥˜ ì²˜ë¦¬
-			login_message.setText("ì¡´ì¬í•˜ì§€ ì•ŠëŠ” IDì…ë‹ˆë‹¤.");
+			// 2¹ø ¿À·ù Ã³¸®
+			login_message.setText("Á¸ÀçÇÏÁö ¾Ê´Â IDÀÔ´Ï´Ù.");
 		}
-	}	
+	}
+	
 	private void register(Connection con, Statement stmt, String id, String password) throws SQLException {
-		if (id.equals("") || password.equals("")) {
-			login_message.setText("ë¹ˆ ê°’ì€ ì…ë ¥í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤");
-		}
-		else {
-			String s = "insert into star_login (id, password) values ('" + id + "', '" + password + "');";
-			stmt.executeUpdate(s);
-			login_message.setText("íšŒì›ê°€ì…ì´ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.");
-		}
-		
-	}	
+		String s = "insert into star_login (id, password) values ('" + id + "', '" + password + "');";
+		stmt.executeUpdate(s);
+	}
+	
 	private void deleteAccount(Connection con, Statement stmt, String id, String password) throws SQLException {
 		String s = "select password from star_login where id = '" + id + "'";
 		ResultSet rs = stmt.executeQuery(s);
-
-		if (!(rs.next())) { login_message.setText("ì¡´ì¬í•˜ì§€ ì•ŠëŠ” IDì…ë‹ˆë‹¤."); }
-		else if (rs.getString("password").equals(password)) {
-			String s1 = "delete from star_login where id = '" + id + "';";
-			stmt.executeUpdate(s1);
-			login_message.setText("íšŒì›íƒˆí‡´ê°€ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.");
-		}
-		else {
-			login_message.setText("ì˜ëª»ëœ ë¹„ë°€ë²ˆí˜¸ì…ë‹ˆë‹¤.");
-		}
 		
-	}	
-	private void alterAccount(Connection con, Statement stmt, String id, String password, String newPassword) throws SQLException {
-		String s = "select password from star_login where id = '" + id + "'";
-		ResultSet rs = stmt.executeQuery(s);
+		// À§ÀÇ 1¹ø ¿À·ù Ã³¸®
+		if (!(rs.next())) { login_message.setText("Á¸ÀçÇÏÁö ¾Ê´Â IDÀÔ´Ï´Ù."); }
 		
-		if (rs.next()) {
-			if (rs.getString("password").equals(password)) {
-				String s1 = "update star_login set password = '" + newPassword + "' where id = '" + id + "';";
-				stmt.executeUpdate(s1);
-				hideAltPage();
-				showLoginPage();
-				login_message.setText("ë¹„ë°€ë²ˆí˜¸ ë³€ê²½ì´ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤");
-			} else {
-				// 1ë²ˆ ì˜¤ë¥˜ ì²˜ë¦¬
-				alt_message.setText("ì˜ëª»ëœ ë¹„ë°€ë²ˆí˜¸ì…ë‹ˆë‹¤. (ë¡œê·¸ì¸ ì‹¤íŒ¨)");
-				alt_message.setVisible(true);
-			}
-		} else {
-			// 2ë²ˆ ì˜¤ë¥˜ ì²˜ë¦¬
-			alt_message.setText("ì¡´ì¬í•˜ì§€ ì•ŠëŠ” IDì…ë‹ˆë‹¤.");
-			alt_message.setVisible(true);
-		}
-	}
-	private void hideLoginPage() {
-		login_idLabel.setVisible(false);
-		login_id.setVisible(false);
-		login_passwdLabel.setVisible(false);
-		login_passwd.setVisible(false);
-		login_login.setVisible(false);
-		login_register.setVisible(false);
-		login_message.setVisible(false);
-		login_message.setText("");
-		login_alter.setVisible(false);
-	}	
-	private void showLoginPage() {
-		login_idLabel.setVisible(true);
-		login_id.setVisible(true);
-		login_passwdLabel.setVisible(true);
-		login_passwd.setVisible(true);
-		login_login.setVisible(true);
-		login_register.setVisible(true);
-		login_message.setVisible(true);
-		login_alter.setVisible(true);
-	}
-	private void hideRegPage() {
-		reg_idLabel.setVisible(false);
-		reg_id.setVisible(false);
-		reg_passwdLabel.setVisible(false);
-		reg_passwd.setVisible(false);
-		reg_passwdCheckLabel.setVisible(false);
-		reg_passwdCheck.setVisible(false);
-		reg_register.setVisible(false);
-		reg_back.setVisible(false);
-		reg_message.setVisible(false);
-		reg_deleteAccount.setVisible(false);
-	}	
-	private void showRegPage() {
-		reg_idLabel.setVisible(true);
-		reg_id.setVisible(true);
-		reg_passwdLabel.setVisible(true);
-		reg_passwd.setVisible(true);
-		reg_passwdCheckLabel.setVisible(true);
-		reg_passwdCheck.setVisible(true);
-		reg_register.setVisible(true);
-		reg_back.setVisible(true);
-		reg_deleteAccount.setVisible(true);
-	}
-	private void hideAltPage() {
-		alt_idLabel.setVisible(false);
-		alt_id.setVisible(false);
-		alt_passwdLabel.setVisible(false);
-		alt_passwd.setVisible(false);
-		alt_newPasswdLabel.setVisible(false);
-		alt_newPasswd.setVisible(false);
-		alt_newPasswdCheckLabel.setVisible(false);
-		alt_newPasswdCheck.setVisible(false);
-		alt_register.setVisible(false);
-		alt_back.setVisible(false);
-		alt_message.setVisible(false);
-	}
-	private void showAltPage() {
-		alt_idLabel.setVisible(true);
-		alt_id.setVisible(true);
-		alt_passwdLabel.setVisible(true);
-		alt_passwd.setVisible(true);
-		alt_newPasswdLabel.setVisible(true);
-		alt_newPasswd.setVisible(true);
-		alt_newPasswdCheckLabel.setVisible(true);
-		alt_newPasswdCheck.setVisible(true);
-		alt_register.setVisible(true);
-		alt_back.setVisible(true);
+		String s1 = "delete from star_login where id = '" + id + "';";
+		stmt.executeUpdate(s1);
 	}
 }
