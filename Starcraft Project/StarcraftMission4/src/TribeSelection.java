@@ -10,11 +10,9 @@ import javax.swing.table.*;
 import javax.swing.border.*;
 
 public class TribeSelection extends JFrame {
-	// JPanel panel;
 	static StarUI User;
 	
 	public static void main(String[] args) throws SQLException {
 		Login login = new Login();
-		// User = new StarUI(0, "User");
 	}
 }

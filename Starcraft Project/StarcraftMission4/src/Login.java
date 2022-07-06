@@ -5,7 +5,7 @@ import java.sql.*;
 import javax.swing.*;
 
 public class Login extends JFrame {
-	// DB 관련 필드변수들
+	// DB 관련
 	public static Connection makeConnection() {
 		String url = "jdbc:mariadb://localhost:3306/star_db";
 		Connection con = null;
@@ -40,6 +40,7 @@ public class Login extends JFrame {
 	JPasswordField login_passwd = new JPasswordField(15);
 	JButton login_login = new JButton("Login");
 	JButton login_register = new JButton("Register");
+	JButton login_alter = new JButton("Alter");
 	JLabel login_message = new JLabel();
 	
 	// 회원가입창 관련 요소
@@ -53,6 +54,19 @@ public class Login extends JFrame {
 	JButton reg_back = new JButton("뒤로");
 	JLabel reg_message = new JLabel("비밀번호가 서로 다릅니다");
 	JButton reg_deleteAccount = new JButton("회원탈퇴");
+	
+	// 회원정보 수정창 관련 요소
+	JLabel alt_idLabel = new JLabel("ID");
+	JLabel alt_passwdLabel = new JLabel("비밀번호");
+	JLabel alt_newPasswdLabel = new JLabel("바꿀 비밀번호");
+	JLabel alt_newPasswdCheckLabel = new JLabel("비밀번호 확인");
+	JTextField alt_id = new JTextField(10);
+	JPasswordField alt_passwd = new JPasswordField(15);
+	JPasswordField alt_newPasswd = new JPasswordField(15);
+	JPasswordField alt_newPasswdCheck = new JPasswordField(15);
+	JButton alt_register = new JButton("변경");
+	JButton alt_back = new JButton("뒤로");
+	JLabel alt_message = new JLabel("비밀번호가 서로 다릅니다");
 	
 	// 메인프레임 생성/설정
 	public Login() throws SQLException {		
@@ -68,6 +82,7 @@ public class Login extends JFrame {
 		add(panel);
 		
 		makeLoginComponents();
+		makeAlterComponents(); // 생성만 되게, 보이지는 않게
 		makeRegisterComponents(); // 생성만 되게, 보이지는 않게
 	}
 	
@@ -84,8 +99,9 @@ public class Login extends JFrame {
 		
 		login_login.setBounds(175, 325, 100, 25);
 		login_register.setBounds(175, 365, 100, 25);
+		login_alter.setBounds(175, 405, 100, 25);
 
-		login_message.setBounds(0, 415, 450, 25);
+		login_message.setBounds(0, 445, 450, 25);
 		login_message.setFont(font);
 		login_message.setForeground(Color.red);
 		login_message.setHorizontalAlignment(JLabel.CENTER); // 중앙정렬
@@ -97,6 +113,7 @@ public class Login extends JFrame {
 		panel.add(login_login);
 		panel.add(login_register);
 		panel.add(login_message);
+		panel.add(login_alter);
 		
 		// 클릭하면 login 메소드 안에서 전부 처리
 		login_login.addMouseListener(new MouseAdapter() {
@@ -114,28 +131,20 @@ public class Login extends JFrame {
 		login_register.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				login_idLabel.setVisible(false);
-				login_id.setVisible(false);
-				login_passwdLabel.setVisible(false);
-				login_passwd.setVisible(false);
-				login_login.setVisible(false);
-				login_register.setVisible(false);
-				login_message.setVisible(false);
-				login_message.setText("");
-				
-				reg_idLabel.setVisible(true);
-				reg_id.setVisible(true);
-				reg_passwdLabel.setVisible(true);
-				reg_passwd.setVisible(true);
-				reg_passwdCheckLabel.setVisible(true);
-				reg_passwdCheck.setVisible(true);
-				reg_register.setVisible(true);
-				reg_back.setVisible(true);
-				reg_deleteAccount.setVisible(true);
+				hideLoginPage();
+				showRegPage();
+			}
+		});
+		
+		// 클릭하면 Alter창으로 화면 변경
+		login_alter.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				hideLoginPage();
+				showAltPage();
 			}
 		});
 	}	
-	private void  makeRegisterComponents() {
+	private void makeRegisterComponents() {
 		reg_idLabel.setBounds(150, 205, 100, 20);
 		reg_idLabel.setFont(font);
 		reg_idLabel.setForeground(Color.white);
@@ -164,16 +173,7 @@ public class Login extends JFrame {
 		
 		// Register 버튼 눌러야 보이도록 하기 위해서 전부 안보이게
 		// 버튼 눌러야 생성되게 만드니 back했다가 다시 Register 누르면 작동 안됨
-		reg_idLabel.setVisible(false);
-		reg_id.setVisible(false);
-		reg_passwdLabel.setVisible(false);
-		reg_passwd.setVisible(false);
-		reg_passwdCheckLabel.setVisible(false);
-		reg_passwdCheck.setVisible(false);
-		reg_register.setVisible(false);
-		reg_back.setVisible(false);
-		reg_message.setVisible(false);
-		reg_deleteAccount.setVisible(false);
+		hideRegPage();
 		
 		panel.add(reg_idLabel);
 		panel.add(reg_id);
@@ -192,30 +192,14 @@ public class Login extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				if ((reg_passwd.getText().equals(reg_passwdCheck.getText()))) {
 					try {
-						// register 메소드 안에 오류 검출 기능 없음
 						register(con, stmt, reg_id.getText(), reg_passwd.getText());
+						login_message.setText("회원가입이 완료되었습니다.");
 					} catch (SQLException e1) {
 						// 1번 오류 처리
 						login_message.setText("중복된 ID입니다.");
 					}
-					reg_idLabel.setVisible(false);
-					reg_id.setVisible(false);
-					reg_passwdLabel.setVisible(false);
-					reg_passwd.setVisible(false);
-					reg_passwdCheckLabel.setVisible(false);
-					reg_passwdCheck.setVisible(false);
-					reg_register.setVisible(false);
-					reg_back.setVisible(false);
-					reg_message.setVisible(false);
-					reg_deleteAccount.setVisible(false);
-					
-					login_idLabel.setVisible(true);
-					login_id.setVisible(true);
-					login_passwdLabel.setVisible(true);
-					login_passwd.setVisible(true);
-					login_login.setVisible(true);
-					login_register.setVisible(true);
-					login_message.setVisible(true);
+					hideRegPage();
+					showLoginPage();
 				}
 				else { 
 					// 2번 오류 처리
@@ -228,24 +212,8 @@ public class Login extends JFrame {
 		reg_back.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				reg_idLabel.setVisible(false);
-				reg_id.setVisible(false);
-				reg_passwdLabel.setVisible(false);
-				reg_passwd.setVisible(false);
-				reg_passwdCheckLabel.setVisible(false);
-				reg_passwdCheck.setVisible(false);
-				reg_register.setVisible(false);
-				reg_back.setVisible(false);
-				reg_message.setVisible(false);
-				reg_deleteAccount.setVisible(false);
-				
-				login_idLabel.setVisible(true);
-				login_id.setVisible(true);
-				login_passwdLabel.setVisible(true);
-				login_passwd.setVisible(true);
-				login_login.setVisible(true);
-				login_register.setVisible(true);
-				login_message.setVisible(true);
+				hideRegPage();
+				showLoginPage();
 	        }
 		});
 		
@@ -257,24 +225,10 @@ public class Login extends JFrame {
 					try {
 						deleteAccount(con, stmt, reg_id.getText(), reg_passwd.getText());
 						
-						reg_idLabel.setVisible(false);
-						reg_id.setVisible(false);
-						reg_passwdLabel.setVisible(false);
-						reg_passwd.setVisible(false);
-						reg_passwdCheckLabel.setVisible(false);
-						reg_passwdCheck.setVisible(false);
-						reg_register.setVisible(false);
-						reg_back.setVisible(false);
-						reg_message.setVisible(false);
-						reg_deleteAccount.setVisible(false);
-
-						login_idLabel.setVisible(true);
-						login_id.setVisible(true);
-						login_passwdLabel.setVisible(true);
-						login_passwd.setVisible(true);
-						login_login.setVisible(true);
-						login_register.setVisible(true);
-						login_message.setVisible(true);
+						hideRegPage();
+						showLoginPage();
+						
+						login_message.setText("회원탈퇴가 완료되었습니다.");
 					} catch (SQLException e1) {
 						// 1번 오류 처리... 하고 싶었지만 없는 아이디 삭제한다고 에러가 발생하진 않아서 작동 안됨
 						// 그래서 deleteAccount 메소드에서 1번 오류 처리
@@ -286,6 +240,81 @@ public class Login extends JFrame {
 					reg_message.setVisible(true);
 				}
 	        }
+		});
+	}
+	private void makeAlterComponents() {
+		alt_idLabel.setBounds(150, 205, 100, 20);
+		alt_idLabel.setFont(font);
+		alt_idLabel.setForeground(Color.white);
+		alt_id.setBounds(200, 205, 100, 20);
+		
+		alt_passwdLabel.setBounds(0, 245, 170, 20);
+		alt_passwdLabel.setFont(font);
+		alt_passwdLabel.setForeground(Color.white);
+		alt_passwdLabel.setHorizontalAlignment(JLabel.RIGHT);
+		alt_passwd.setBounds(200, 245, 100, 20);
+		
+		alt_newPasswdLabel.setBounds(0, 285, 170, 20);
+		alt_newPasswdLabel.setFont(font);
+		alt_newPasswdLabel.setForeground(Color.white);
+		alt_newPasswdLabel.setHorizontalAlignment(JLabel.RIGHT);
+		alt_newPasswd.setBounds(200, 285, 100, 20);
+		
+		alt_newPasswdCheckLabel.setBounds(0, 325, 170, 20);
+		alt_newPasswdCheckLabel.setFont(font);
+		alt_newPasswdCheckLabel.setForeground(Color.white);
+		alt_newPasswdCheckLabel.setHorizontalAlignment(JLabel.RIGHT);
+		alt_newPasswdCheck.setBounds(200, 325, 100, 20);
+		
+		alt_register.setBounds(175, 375, 100, 25);
+		alt_back.setBounds(175, 415, 100, 25);
+		alt_message.setBounds(0, 455, 450, 25);
+		alt_message.setHorizontalAlignment(JLabel.CENTER);
+		alt_message.setFont(font);
+		alt_message.setForeground(Color.red);
+		alt_message.setVisible(false);
+		
+		// Alter 버튼 눌러야 보이도록 하기 위해서 전부 안보이게
+		// 버튼 눌러야 생성되게 만드니 back했다가 다시 Alter 누르면 작동 안됨
+		hideAltPage();
+		
+		panel.add(alt_idLabel);
+		panel.add(alt_id);
+		panel.add(alt_passwdLabel);
+		panel.add(alt_passwd);
+		panel.add(alt_newPasswdLabel);
+		panel.add(alt_newPasswd);
+		panel.add(alt_newPasswdCheckLabel);
+		panel.add(alt_newPasswdCheck);
+		panel.add(alt_register);
+		panel.add(alt_back);
+		panel.add(alt_message);
+		
+		// 정보 수정 시 발생 가능한 오류는 1.비밀번호 틀림   2.없는 아이디로 로그인   3.비밀번호 확인 틀림
+		alt_register.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (alt_newPasswd.getText().equals(alt_newPasswdCheck.getText())) {
+					try {
+						alterAccount(con, stmt, alt_id.getText(), alt_passwd.getText(), alt_newPasswd.getText());
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+				} else {
+					// 3번 오류 처리
+					alt_message.setText("잘못된 비밀번호입니다 (비밀번호 확인)");
+					alt_message.setVisible(true);
+				}
+				
+			}
+		});
+		
+		alt_back.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				hideAltPage();
+				showLoginPage();
+			}
 		});
 	}
 	// 로그인 시 발생 가능한 오류는 1.비밀번호 틀림   2.없는 아이디로 로그인
@@ -304,13 +333,11 @@ public class Login extends JFrame {
 			// 2번 오류 처리
 			login_message.setText("존재하지 않는 ID입니다.");
 		}
-	}
-	
+	}	
 	private void register(Connection con, Statement stmt, String id, String password) throws SQLException {
 		String s = "insert into star_login (id, password) values ('" + id + "', '" + password + "');";
 		stmt.executeUpdate(s);
-	}
-	
+	}	
 	private void deleteAccount(Connection con, Statement stmt, String id, String password) throws SQLException {
 		String s = "select password from star_login where id = '" + id + "'";
 		ResultSet rs = stmt.executeQuery(s);
@@ -320,5 +347,96 @@ public class Login extends JFrame {
 		
 		String s1 = "delete from star_login where id = '" + id + "';";
 		stmt.executeUpdate(s1);
+	}	
+	private void alterAccount(Connection con, Statement stmt, String id, String password, String newPassword) throws SQLException {
+		String s = "select password from star_login where id = '" + id + "'";
+		ResultSet rs = stmt.executeQuery(s);
+		
+		if (rs.next()) {
+			if (rs.getString("password").equals(password)) {
+				String s1 = "update star_login set password = '" + newPassword + "' where id = '" + id + "';";
+				stmt.executeUpdate(s1);
+				hideAltPage();
+				showLoginPage();
+				login_message.setText("비밀번호 변경이 완료되었습니다");
+			} else {
+				// 1번 오류 처리
+				alt_message.setText("잘못된 비밀번호입니다. (로그인 실패)");
+				alt_message.setVisible(true);
+			}
+		} else {
+			// 2번 오류 처리
+			alt_message.setText("존재하지 않는 ID입니다.");
+			alt_message.setVisible(true);
+		}
+	}
+	private void hideLoginPage() {
+		login_idLabel.setVisible(false);
+		login_id.setVisible(false);
+		login_passwdLabel.setVisible(false);
+		login_passwd.setVisible(false);
+		login_login.setVisible(false);
+		login_register.setVisible(false);
+		login_message.setVisible(false);
+		login_message.setText("");
+		login_alter.setVisible(false);
+	}	
+	private void showLoginPage() {
+		login_idLabel.setVisible(true);
+		login_id.setVisible(true);
+		login_passwdLabel.setVisible(true);
+		login_passwd.setVisible(true);
+		login_login.setVisible(true);
+		login_register.setVisible(true);
+		login_message.setVisible(true);
+		login_alter.setVisible(true);
+	}
+	private void hideRegPage() {
+		reg_idLabel.setVisible(false);
+		reg_id.setVisible(false);
+		reg_passwdLabel.setVisible(false);
+		reg_passwd.setVisible(false);
+		reg_passwdCheckLabel.setVisible(false);
+		reg_passwdCheck.setVisible(false);
+		reg_register.setVisible(false);
+		reg_back.setVisible(false);
+		reg_message.setVisible(false);
+		reg_deleteAccount.setVisible(false);
+	}	
+	private void showRegPage() {
+		reg_idLabel.setVisible(true);
+		reg_id.setVisible(true);
+		reg_passwdLabel.setVisible(true);
+		reg_passwd.setVisible(true);
+		reg_passwdCheckLabel.setVisible(true);
+		reg_passwdCheck.setVisible(true);
+		reg_register.setVisible(true);
+		reg_back.setVisible(true);
+		reg_deleteAccount.setVisible(true);
+	}
+	private void hideAltPage() {
+		alt_idLabel.setVisible(false);
+		alt_id.setVisible(false);
+		alt_passwdLabel.setVisible(false);
+		alt_passwd.setVisible(false);
+		alt_newPasswdLabel.setVisible(false);
+		alt_newPasswd.setVisible(false);
+		alt_newPasswdCheckLabel.setVisible(false);
+		alt_newPasswdCheck.setVisible(false);
+		alt_register.setVisible(false);
+		alt_back.setVisible(false);
+		alt_message.setVisible(false);
+	}
+	private void showAltPage() {
+		alt_idLabel.setVisible(true);
+		alt_id.setVisible(true);
+		alt_passwdLabel.setVisible(true);
+		alt_passwd.setVisible(true);
+		alt_newPasswdLabel.setVisible(true);
+		alt_newPasswd.setVisible(true);
+		alt_newPasswdCheckLabel.setVisible(true);
+		alt_newPasswdCheck.setVisible(true);
+		alt_register.setVisible(true);
+		alt_back.setVisible(true);
 	}
 }
