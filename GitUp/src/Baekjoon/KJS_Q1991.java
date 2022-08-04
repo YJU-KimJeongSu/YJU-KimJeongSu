@@ -5,14 +5,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-class Node {
+class Node0 {
 	char data;
-	Node left;
-	Node right;
+	Node0 left;
+	Node0 right;
 	
-	public Node(char data) { this.data = data; }
-	public void addLeft(Node left) { this.left = left; }
-	public void addRight(Node right) { this.right = right; }
+	public Node0(char data) { this.data = data; }
+	public void addLeft(Node0 left) { this.left = left; }
+	public void addRight(Node0 right) { this.right = right; }
 	
 	// 전위 순회
 	public void preOrder() {
@@ -43,14 +43,14 @@ public class KJS_Q1991 {
 		StringTokenizer st = null;
 		
 		int n = Integer.parseInt(br.readLine());
-		Node[] node = new Node[n];
+		Node0[] Node0 = new Node0[n];
 		
-		// 먼저 노드 다 만들기. node[0]은 A, node[1]은 B, ...
+		// 먼저 노드 다 만들기. Node0[0]은 A, Node0[1]은 B, ...
 		char temp = 'A';
-		for (int i = 0; i < node.length; i++) { node[i] = new Node(temp++);	}
+		for (int i = 0; i < Node0.length; i++) { Node0[i] = new Node0(temp++);	}
 		
 		// 그 다음에 연결하기
-		for (int i = 0; i < node.length; i++) {
+		for (int i = 0; i < Node0.length; i++) {
 			st = new StringTokenizer(br.readLine(), " ");
 			
 			// 노드가 알파벳 순으로 정렬되어 있으므로 알파벳을 인덱스 숫자로 변환해서 사용
@@ -59,15 +59,15 @@ public class KJS_Q1991 {
 			int right = st.nextToken().charAt(0) - 'A';
 			
 			// '.' - 'A' = -19
-			if (left != -19) node[t].addLeft(node[left]);
-			if (right != -19) node[t].addRight(node[right]);
+			if (left != -19) Node0[t].addLeft(Node0[left]);
+			if (right != -19) Node0[t].addRight(Node0[right]);
 		}
 		
-		node[0].preOrder();
+		Node0[0].preOrder();
 		System.out.println();
-		node[0].inOrder();
+		Node0[0].inOrder();
 		System.out.println();
-		node[0].postOrder();
+		Node0[0].postOrder();
 	}
 
 }
