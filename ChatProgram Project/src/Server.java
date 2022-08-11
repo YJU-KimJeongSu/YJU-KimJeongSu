@@ -20,22 +20,24 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class Server {
 
 	private JFrame frame;
 	private JTextField portTextBox;
 	private ServerSocket sSocket;
-	private Socket cSocket;
+	private boolean isOpened = false;
 	
 	// ServerThread랑 같이 사용할 변수들. 멀티스레딩에선 ArrayList말고 Vector
 	// roomList : Vector<String>으로 채팅방 기록
 	// roomMember : HashMap<BufferedWriter, String>으로 버퍼라이터마다 채팅방 부여
 	// nickname : HashMap<BufferedReader, String>으로 버퍼리더 하나마다 닉네임 부여
 	static public DefaultListModel<String> model;
-	static public Vector<String> roomList;
-	static public HashMap<BufferedWriter, String> roomMember;
-	static public HashMap<BufferedReader, String> nickname;
+	static public Vector<String> roomList = new Vector<String>();
+	static public HashMap<BufferedWriter, String> roomMember = new HashMap<BufferedWriter, String>();
+	static public HashMap<BufferedReader, String> nickname = new HashMap<BufferedReader, String>();
 	
 	/**
 	 * Launch the application.
@@ -66,7 +68,23 @@ public class Server {
 	private void initialize() {
 		// 메인프레임
 		frame = new JFrame();
-		frame.setBounds(100, 100, 310, 450);
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				try {
+					sSocket.close();
+				} catch (IOException e1) {}
+			}
+			@Override
+			public void windowOpened(WindowEvent e) {
+				try {
+					sSocket = new ServerSocket();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		frame.setBounds(100, 100, 400, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		// 메인프레임 전체를 덮는 메인패널
@@ -77,19 +95,20 @@ public class Server {
 		
 		// 포트 입력받고 열기 위한 상단 패널
 		JPanel serverOpenPanel = new JPanel();
-		serverOpenPanel.setBounds(0, 0, 300, 50);
+		serverOpenPanel.setBounds(0, 0, 388, 50);
 		serverOpenPanel.setBackground(Color.LIGHT_GRAY);
 		serverOpenPanel.setLayout(null);
 		mainPanel.add(serverOpenPanel);
 		
 		// 포트 라벨
 		JLabel portLabel = new JLabel("Port");
-		portLabel.setBounds(40, 17, 42, 15);
+		portLabel.setBounds(68, 17, 42, 15);
 		serverOpenPanel.add(portLabel);
 		
 		// 포트 입력 받는 필드
 		portTextBox = new JTextField();
-		portTextBox.setBounds(82, 14, 96, 21);
+		portTextBox.setText("5299");
+		portTextBox.setBounds(120, 14, 96, 21);
 		serverOpenPanel.add(portTextBox);
 		portTextBox.setColumns(10);
 		
@@ -101,14 +120,14 @@ public class Server {
 				openBtnAction();
 			}
 		});
-		openBtn.setBounds(211, 13, 79, 23);
+		openBtn.setBounds(272, 13, 79, 23);
 		serverOpenPanel.add(openBtn);
 		
 		
 		
 		// 서버 상태 보여줄 하단 패널
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(5, 55, 288, 353);
+		scrollPane.setBounds(5, 55, 378, 505);
 		mainPanel.setBackground(Color.GRAY);
 		mainPanel.add(scrollPane);
 		
@@ -116,27 +135,32 @@ public class Server {
 		model = new DefaultListModel<String>();
 		JList<String> list = new JList<String>(model);
 		model.addElement("test");
-		model.addElement("test");
-		model.addElement("test");
-		model.addElement("test");
 		scrollPane.setViewportView(list);
 	}
 	
 	private void openBtnAction() {
+		if (isOpened == false) {
+			model.addElement("Server Open");
+			isOpened = true;
+		}
+		else model.addElement("Server Is Already Opened");
 		while (true) {
 			try {
-				sSocket = new ServerSocket();
 				// 연결 들어와야 다음 진행
 				sSocket.bind(new InetSocketAddress(Integer.parseInt(portTextBox.getText())));
-				cSocket = sSocket.accept();
 			} catch (IOException e) {
-				model.addElement("소켓 연결에 실패했습니다");
-				break;
+				return;
 			}
-			
-			new ServerThread(cSocket).start();
+			new Thread() {
+				public void run() {					
+					while (true) {
+						try {
+							Socket cSocket = sSocket.accept();
+							new ServerThread(cSocket).start();
+						} catch (Exception e) {}
+					}
+				}
+			}.start();
 		}
-		
-		
 	}
 }

@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.Socket;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -10,7 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class Client {
-
+	Socket cSocket;
 	private JFrame frame;
 	int autoLocationX = 5;
 
@@ -21,8 +22,9 @@ public class Client {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Client window = new Client();
-					window.frame.setVisible(true);
+					@SuppressWarnings("unused")
+					// 로그인 먼저 해야하니 Client를 실행시켜도 ClientLogin로 연결
+					ClientLogin window = new ClientLogin();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -33,7 +35,9 @@ public class Client {
 	/**
 	 * Create the application.
 	 */
-	public Client() {
+	public Client(Socket cSocket) {
+//		System.out.println("전달받음 " + cSocket);
+		this.cSocket = cSocket;
 		initialize();
 	}
 
@@ -44,6 +48,7 @@ public class Client {
 		// 생성시 초기화
 		frame = new JFrame();
 		frame.setBounds(100, 100, 600, 450);
+		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel MainPanel = new JPanel();
