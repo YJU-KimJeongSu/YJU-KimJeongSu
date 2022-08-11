@@ -13,6 +13,7 @@ import java.net.Socket;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -59,7 +60,6 @@ public class ClientLogin {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		cSocket = new Socket();
 		frame = new JFrame();
 		
 		frame.setBounds(100, 100, 300, 220);
@@ -76,17 +76,18 @@ public class ClientLogin {
 		connectBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				// 연결 실패 후 다시 연결할려면 인스턴스 새로 만들어야함
+				cSocket = null;
+				cSocket = new Socket();
 				try {
+					// connectBtn 버튼 누르면 서버 접속
 					cSocket.connect(new InetSocketAddress(IPTxt.getText(), Integer.parseInt(portTxt.getText())));
-					screenChange();
-					bw = new BufferedWriter(new OutputStreamWriter(cSocket.getOutputStream()));
+					screenChange(); // 로그인 화면으로 전환
+					bw = new BufferedWriter(new OutputStreamWriter(cSocket.getOutputStream())); // 서버로부터 입력받을 준비
 				} catch (NumberFormatException | IOException e1) {
-					// 서버 연결 실패
-					System.out.println("서버 접속 실패");
+					JOptionPane.showMessageDialog(null, "서버 연결 실패");
 				}	
-				
-//				Client client = new Client(cSocket);
-//				frame.dispose();
+
 			}
 		});
 		connectBtn.setBounds(66, 132, 145, 23);
@@ -134,20 +135,22 @@ public class ClientLogin {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				try {
+					// Start 버튼 누르면 현재 아이디 정보 서버로 보내기
 					bw.write("LOGIN;");
 					bw.write(nicknameTxt.getText());
 					bw.write("\n");
 					bw.flush();
 					
+					// 서버로부터 아이디 중복인지 신호 받아서 성공/실패 출력
 					if (isLoginSuccess()) {
 						System.out.println("로그인 성공");
 						new Client(cSocket);
 						frame.dispose();
 					}
-					else System.out.println("로그인 실패");
-				} catch (IOException e1) {
-					System.out.println("닉네임 전송 실패");
-				}
+					else {
+						JOptionPane.showMessageDialog(null, "로그인 실패");
+					}
+				} catch (IOException e1) {}
 			}
 		});
 		startBtn.setBounds(66, 115, 145, 23);

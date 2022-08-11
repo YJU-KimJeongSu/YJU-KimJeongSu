@@ -52,7 +52,7 @@ public class ServerThread extends Thread{
 					bw.write("LoginFailed\n");
 					bw.flush();
 				} else {
-					addServerState(input + "로그인 성공");
+					addServerState(input + " 로그인 성공");
 					Server.nickname.put(br, input);
 					Server.roomMember.put(bw, null);
 					bw.write("LoginSuccess\n");
