@@ -144,11 +144,13 @@ public class Server {
 			isOpened = true;
 		}
 		else model.addElement("Server Is Already Opened");
+		
 		while (true) {
 			try {
 				// 연결 들어와야 다음 진행
+				Thread.sleep(50); // 렉 방지. 간혹 묘하게 버벅거림 원인인듯?
 				sSocket.bind(new InetSocketAddress(Integer.parseInt(portTextBox.getText())));
-			} catch (IOException e) {
+			} catch (IOException | InterruptedException e) {
 				return;
 			}
 			new Thread() {
