@@ -34,10 +34,12 @@ public class Server {
 	// roomList : Vector<String>으로 채팅방 기록
 	// roomMember : HashMap<BufferedWriter, String>으로 버퍼라이터마다 채팅방 부여
 	// nickname : HashMap<BufferedReader, String>으로 버퍼리더 하나마다 닉네임 부여
+	// users : HashMap<BufferedWriter, BufferedReader> 나중에 추가 / 버퍼라이터-버퍼리더 짝지어서 사용자 찾기 편하게 하기 위해서
 	static public DefaultListModel<String> model;
 	static public Vector<String> roomList = new Vector<String>();
 	static public HashMap<BufferedWriter, String> roomMember = new HashMap<BufferedWriter, String>();
 	static public HashMap<BufferedReader, String> nickname = new HashMap<BufferedReader, String>();
+	static public HashMap<BufferedWriter, BufferedReader> users = new HashMap<BufferedWriter, BufferedReader>();
 	
 	/**
 	 * Launch the application.
@@ -84,8 +86,9 @@ public class Server {
 				}
 			}
 		});
-		frame.setBounds(100, 100, 400, 600);
+		frame.setBounds(0, 0, 400, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setTitle("ChatServer");
 		
 		// 메인프레임 전체를 덮는 메인패널
 		JPanel mainPanel = new JPanel();
