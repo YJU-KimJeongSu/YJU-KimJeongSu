@@ -41,14 +41,14 @@ public class ServerThread extends Thread{
 	BufferedReader tempBr;
 	String tempNickname;
 	public synchronized void sendToAllUser(String message) {
-		for (BufferedWriter bw : Server.roomMember.keySet()) {
+		for (BufferedWriter tBw : Server.roomMember.keySet()) {
 			try {
 				Thread.sleep(50);
-				bw.write(message + "\n");
-				bw.flush();
+				tBw.write(message + "\n");
+				tBw.flush();
 				
 				// 버퍼라이터 -> 버퍼리더 -> 닉네임
-				tempBr = Server.users.get(bw);
+				tempBr = Server.users.get(tBw);
 				tempNickname = Server.nickname.get(tempBr);
 				addServerState(tempNickname + "에게 " + message + "전송");
 			} catch (IOException | InterruptedException e) {}
@@ -65,7 +65,7 @@ public class ServerThread extends Thread{
 		// LOGIN;nickname
 		// CHAT;챗내용
 		// MAKEROOM;방이름
-		// JOINROOM;방이름
+		// JoinedRoom;방이름
 		
 		// 보낼 데이터 형식
 		// LoginFailed
@@ -74,7 +74,7 @@ public class ServerThread extends Thread{
 		// MakeRoomFailed
 		// MakeRoomSuccess
 		// NowRoomList;방이름:방이름:방이름:
-		// JoinedRoom;방이름:닉네임
+		// JoinRoom;닉네임
 		
 		try {
 			// 해당 소켓(사용자)의 입/출력 담당
@@ -92,7 +92,7 @@ public class ServerThread extends Thread{
 				if (checkDuplicateNickname(input)) {
 					bw.write("LoginFailed\n");
 					bw.flush();
-					addServerState("LoginFailed : 중복된 닉네임");
+					addServerState("LoginFailed : 중복된 닉네임 생성 시도");
 				} 
 				else {
 					Server.nickname.put(br, input);
@@ -136,7 +136,6 @@ public class ServerThread extends Thread{
 						bw.write("MakeRoomSuccess\n");
 						bw.flush();
 						addServerState(nickname + " : " + input + "채팅방 생성");
-//						sendToAllUser("NowRoomList;");
 						String tempMessage1 = "NowRoomList;";
 						for (String str : Server.roomList) tempMessage1 += str + ":";
 						sendToAllUser(tempMessage1);
@@ -145,7 +144,25 @@ public class ServerThread extends Thread{
 				
 				// 채팅방 들어가기
 				else if (input.startsWith("JoinedRoom")) {
-					
+					input = input.replaceAll("JoinedRoom;", "");
+					// 해당 유저의 채팅방 정보 변경하고
+					// 해당 채팅방의 모든 사람에게 메세지 뿌리기
+					Server.roomMember.remove(bw);
+					Server.roomMember.put(bw, input);
+					addServerState(nickname + " : " + input + "채팅방 접속");
+					// 모든 버퍼라이터 순회하면서 채팅방이 input이랑 같으면 접속 메세지 보내기
+					for (BufferedWriter tBw : Server.roomMember.keySet()) {
+						// Server.roomMember.get(tBw)도 리턴값이 String인데
+						// Server.roomMember.get(tBw).equals는 안먹힘
+						if (input.equals(Server.roomMember.get(tBw))) {
+							tBw.write("JoinRoom;" + nickname + "\n");
+							tBw.flush();
+							// 버퍼라이터 -> 버퍼리더 -> 닉네임
+							BufferedReader tBr = Server.users.get(tBw);
+							String tempMessage2 = Server.nickname.get(tBr);
+							addServerState(tempMessage2 + "에게 " + nickname + "이 " + input + "에 접속했음을 전달");
+						}
+					}
 				}
 				
 				// 그냥 채팅

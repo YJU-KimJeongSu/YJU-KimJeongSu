@@ -18,16 +18,74 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+
 
 public class Client {
-	Socket cSocket;
 	private JFrame frame;
+	Socket cSocket;
 	int autoLocationX = -45;
 	BufferedReader br;
 	BufferedWriter bw;
 	DefaultListModel<String> model;
 	HashMap<String, ChatRoomBtn> chatRoom; // 채팅방 이름-버튼으로 짝지어서 넣기
+	JTextField sendMessageTxt;
+	String nowChatRoom = "";
+	String myNickname;
+	
+	// 독립적인 클래스로 만드니 변수나 메소드 쓰기 힘들어서 그냥 내부클래스로 선언
+	class ChatRoomBtn extends JButton {
+		String name;
+		public ChatRoomBtn(JPanel panel, int x, String name) {
+			panel.add(this);
+			setBounds(x, 5, 100, 50);
+			addMouseListener();
+			setText(name);
+			this.name = name;
+		}
 
+		public synchronized void addMouseListener() {
+			addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if (canRoomJoin(getText()))  {
+						try {
+							bw.write("JoinedRoom;" + name + "\n");
+							bw.flush();
+							nowChatRoom = name;
+//							modelAddElements(name + "채팅방에 참가하였습니다"); // 생각해보니 이거 서버에서 해야함
+						} catch (IOException e1) {}
+					}
+					else {
+						modelAddElements("[System]" + name + "채팅방에 이미 참가중입니다");
+					}
+				}
+			});
+		}
+	}
+	
+	int autoLocationing() {
+		autoLocationX += 105;
+		return autoLocationX;
+	}
+	
+	boolean canRoomJoin(String roomName) {
+		boolean b = false;
+		// JoinedRoom;방이름
+		try {
+			if (!nowChatRoom.equals(roomName)) b = true;
+		} catch (Exception e) {}
+		
+		return b;
+	}
+	
+	// 내부 클래스 안에서는 model 접근이 안돼서 만들었음
+	void modelAddElements(String str) {
+		model.addElement(str);
+	}
+	
 	/**
 	 * Launch the application.
 	 */
@@ -51,8 +109,9 @@ public class Client {
 	/**
 	 * Create the application.
 	 */
-	public Client(Socket cSocket) {
+	public Client(Socket cSocket, String nickname) {
 		this.cSocket = cSocket;
+		this.myNickname = nickname;
 		try {
 			br = new BufferedReader(new InputStreamReader(cSocket.getInputStream()));
 			bw = new BufferedWriter(new OutputStreamWriter(cSocket.getOutputStream()));
@@ -114,6 +173,25 @@ public class Client {
 		JList<String> chattingList = new JList<String>(model);
 		scrollPane.setViewportView(chattingList);
 		
+		sendMessageTxt = new JTextField();
+		sendMessageTxt.setBounds(152, 370, 344, 35);
+		MainPanel.add(sendMessageTxt);
+		sendMessageTxt.setColumns(10);
+		
+		JButton sendBtn = new JButton("\uC804\uC1A1");
+		sendBtn.setBounds(506, 370, 72, 35);
+		MainPanel.add(sendBtn);
+		
+		JLabel lblNewLabel = new JLabel("ID : ");
+		lblNewLabel.setBounds(10, 380, 30, 15);
+		MainPanel.add(lblNewLabel);
+		
+		JLabel nicknameLabel = new JLabel("");
+		nicknameLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		nicknameLabel.setBounds(36, 376, 106, 22);
+		nicknameLabel.setText(myNickname);
+		MainPanel.add(nicknameLabel);
+		
 		new Thread() {
 			public void run() {
 				String input = null;
@@ -134,7 +212,11 @@ public class Client {
 									chatRoom.put(str[i], new ChatRoomBtn(chatRoomBarPanel, autoLocationing(), str[i]));
 								}
 							}
-							
+						}
+						else if (input.startsWith("JoinRoom;")) {
+							input = input.replaceAll("JoinRoom;", "");
+							// input = JoinRoom;접속자_닉네임
+							model.addElement("[System]" + input + "님이 채팅방에 참가하였습니다.");
 						}
 					} catch (IOException | InterruptedException e) {
 						System.err.println("서버와 연결이 종료되었습니다.");
@@ -144,10 +226,5 @@ public class Client {
 
 			}
 		}.start();
-	}
-	
-	int autoLocationing() {
-		autoLocationX += 105;
-		return autoLocationX;
 	}
 }

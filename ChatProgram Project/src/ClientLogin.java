@@ -148,11 +148,11 @@ public class ClientLogin {
 						bw.write(nicknameTxt.getText());
 						bw.write("\n");
 						bw.flush();
+						String nickname = nicknameTxt.getText();
 
-						// 서버로부터 아이디 중복인지 신호 받아서 성공/실패 출력
+						// 서버로부터 아이디 중복인지 신호 받아서 성공/실패 확인
 						if (isLoginSuccess()) {
-							System.out.println("로그인 성공");
-							new Client(cSocket);
+							new Client(cSocket, nickname);
 							frame.dispose();
 						}
 						else {
@@ -166,7 +166,6 @@ public class ClientLogin {
 		startBtn.setBounds(66, 115, 145, 23);
 		startBtn.setVisible(false);
 		panel.add(startBtn);
-
 	}
 	
 	private void screenChange() {
