@@ -5,10 +5,11 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 public class ChatRoomBtn extends JButton {
-	public ChatRoomBtn(JPanel panel, int x) {
+	public ChatRoomBtn(JPanel panel, int x, String name) {
 		panel.add(this);
-		setBounds(x, 5, 50, 50);
+		setBounds(x, 5, 100, 50);
 		addMouseListener();
+		setText(name);
 	}
 	
 	public synchronized void addMouseListener() {

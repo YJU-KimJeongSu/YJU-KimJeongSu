@@ -5,9 +5,6 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.Socket;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -17,18 +14,14 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 public class MakeRoomModal extends JDialog {
-	Socket cSocket;
 	BufferedReader br;
 	BufferedWriter bw;
 
-	public MakeRoomModal(Window parent, JLabel label, Socket cSocket) {
+	public MakeRoomModal(Window parent, JLabel label, BufferedReader br, BufferedWriter bw) {
 		super(parent, "Modal Practice", ModalityType.APPLICATION_MODAL);
-		this.cSocket = cSocket;
 
-		try {
-			br = new BufferedReader(new InputStreamReader(cSocket.getInputStream()));
-			bw = new BufferedWriter(new OutputStreamWriter(cSocket.getOutputStream()));
-		} catch (IOException e1) {}
+		this.br = br;
+		this.bw = bw;
 
 		setSize(300, 200);
 		getContentPane().setLayout(null);
@@ -45,10 +38,15 @@ public class MakeRoomModal extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				String roomName = roomNameTxt.getText();
 				if (roomName.equals(""))  JOptionPane.showMessageDialog(null, "공백은 입력할 수 없습니다");
+				else if (roomName.contains(":"))  JOptionPane.showMessageDialog(null, ":는 입력할 수 없습니다");
 				else {
 					try {
-						bw.write("MAKEROOM;" + roomName + "\n");
+						bw.write("MakeRoom;" + roomName + "\n");
 						bw.flush();
+						// 원래 여기서 readLine했다가 꼬였음
+						// 한개의 인풋스트림으로 여러군데서 동시에 받아서 그런듯
+						// client에서 받아서 처리하자
+						dispose();
 					} catch (IOException e1) {}
 				}
 			}

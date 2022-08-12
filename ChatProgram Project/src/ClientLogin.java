@@ -140,6 +140,9 @@ public class ClientLogin {
 					if (nicknameTxt.getText().equals("")) {
 						JOptionPane.showMessageDialog(null, "공백은 입력할 수 없습니다");
 					}
+					else if (nicknameTxt.getText().contains(":")) {
+						JOptionPane.showMessageDialog(null, ":은 입력할 수 없습니다");
+					}
 					else {
 						bw.write("LOGIN;");
 						bw.write(nicknameTxt.getText());

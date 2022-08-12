@@ -9,19 +9,24 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.util.Vector;
+import java.util.HashMap;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 public class Client {
 	Socket cSocket;
 	private JFrame frame;
-	int autoLocationX = 5;
+	int autoLocationX = -45;
 	BufferedReader br;
 	BufferedWriter bw;
+	DefaultListModel<String> model;
+	HashMap<String, ChatRoomBtn> chatRoom; // 채팅방 이름-버튼으로 짝지어서 넣기
 
 	/**
 	 * Launch the application.
@@ -90,7 +95,7 @@ public class Client {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// 채팅방 만드는 JFream 띄우기. modal은 JDialog만 되는듯
-				new MakeRoomModal(frame, new JLabel(), cSocket).setVisible(true);;
+				new MakeRoomModal(frame, new JLabel(), br, bw).setVisible(true);;
 			}
 		});
 		makeRoomWindowBtn.setBounds(5, 5, 50, 50);
@@ -98,25 +103,51 @@ public class Client {
 		
 		// 상단바 채팅방 선택 버튼들
 		// 누르면 채팅방 변경
-		Vector<ChatRoomBtn> chatRooms = new Vector<ChatRoomBtn>();
-		chatRooms.add(new ChatRoomBtn (chatRoomBarPanel, autoLocationing()));
-		chatRooms.add(new ChatRoomBtn (chatRoomBarPanel, autoLocationing()));
-		chatRooms.add(new ChatRoomBtn (chatRoomBarPanel, autoLocationing()));
-		chatRooms.add(new ChatRoomBtn (chatRoomBarPanel, autoLocationing()));
+		chatRoom = new HashMap<String, ChatRoomBtn>();
+//		chatRoom.put("테스트채팅방", new ChatRoomBtn(chatRoomBarPanel, autoLocationing()));
 		
-		// 채팅방
-		// 채팅 입력하고, 채팅 보이게
-		JPanel chattingPanel = new JPanel();
-		chattingPanel.setBounds(0, 60, 588, 355);
-		MainPanel.add(chattingPanel);
-		chattingPanel.setLayout(null);
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(0, 60, 588, 300);
+		MainPanel.add(scrollPane);
 		
+		model = new DefaultListModel<String>();
+		JList<String> chattingList = new JList<String>(model);
+		scrollPane.setViewportView(chattingList);
 		
-		
+		new Thread() {
+			public void run() {
+				String input = null;
+				while (true) {
+					try {
+						Thread.sleep(10);
+						input = br.readLine();
+						// 클라이언트가 받을 메세지 : 채팅, 방 조인(해당 방에 사람만), 방 생성
+						
+						// 방 생성 시 버튼이랑 방 연결하는거 신경쓰기
+						// NowRoomList;방이름:방이름:방이름:
+						if (input.startsWith("NowRoomList;")) {
+							input = input.replaceAll("NowRoomList;", "");
+							// input = 방이름1:방이름2:...
+							String[] str = input.split(":");
+							for (int i = 0; i < str.length; i++) {
+								if (!chatRoom.containsKey(str[i]) && !str[i].equals("")) {
+									chatRoom.put(str[i], new ChatRoomBtn(chatRoomBarPanel, autoLocationing(), str[i]));
+								}
+							}
+							
+						}
+					} catch (IOException | InterruptedException e) {
+						System.err.println("서버와 연결이 종료되었습니다.");
+						break;
+					}
+				}
+
+			}
+		}.start();
 	}
 	
 	int autoLocationing() {
-		autoLocationX += 55;
+		autoLocationX += 105;
 		return autoLocationX;
 	}
 }
