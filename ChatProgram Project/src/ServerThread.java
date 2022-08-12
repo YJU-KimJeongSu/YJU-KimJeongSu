@@ -3,23 +3,22 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 public class ServerThread extends Thread{
 	Socket cSocket = null;
 
 	public ServerThread(Socket cSocket) {
-		Server.model.addElement("(스레드 시작)새 클라이언트 연결");
+		Server.model.addElement("[스레드 시작] 새 클라이언트 연결");
 		try {
 			this.cSocket = cSocket;
 		} catch (Exception e) {}
 	}
 	
-	public boolean checkNickname(String nickname) {
+	public boolean checkDuplicate (String nickname) {
 		boolean b = false;
-		// Value에 nickname이 포함되어 있으면 true 반환
-		if (Server.nickname.containsValue(nickname)) { b = true; }
+		// Value에 nickname이 포함되어 있으면(=중복이면) true 반환
+		if (Server.nickname.containsValue(nickname)) b = true; 
 		return b;
 	}
 
@@ -33,6 +32,13 @@ public class ServerThread extends Thread{
 		// CHAT;챗내용
 		// MAKEROOM;방이름
 		// JOINROOM;방이름
+		
+		// 보낼 데이터 형식
+		// LoginFailed
+		// LoginSuccess
+		// Chat;방이름;내용
+		// MakedRoom;방이름
+		// JoinedRoom;방이름;닉네임
 		try {
 			// 해당 소켓(사용자)의 입/출력 담당
 			BufferedReader br = new BufferedReader(new InputStreamReader(cSocket.getInputStream()));
@@ -47,11 +53,12 @@ public class ServerThread extends Thread{
 				// 현재 input에 닉네임만 들어가있음
 				
 				// true면 중복, false면 중복아님
-				if (checkNickname(input)) {
+				if (checkDuplicate(input)) {
 					addServerState("LoginFailed : 중복된 닉네임");
 					bw.write("LoginFailed\n");
 					bw.flush();
-				} else {
+				} 
+				else {
 					addServerState(input + " 로그인 성공");
 					Server.nickname.put(br, input);
 					Server.roomMember.put(bw, null);

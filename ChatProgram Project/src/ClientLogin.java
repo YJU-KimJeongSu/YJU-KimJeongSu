@@ -65,6 +65,7 @@ public class ClientLogin {
 		frame.setBounds(100, 100, 300, 220);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
+		frame.setTitle("로그인");
 
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.LIGHT_GRAY);
@@ -136,20 +137,26 @@ public class ClientLogin {
 			public void mouseClicked(MouseEvent e) {
 				try {
 					// Start 버튼 누르면 현재 아이디 정보 서버로 보내기
-					bw.write("LOGIN;");
-					bw.write(nicknameTxt.getText());
-					bw.write("\n");
-					bw.flush();
-					
-					// 서버로부터 아이디 중복인지 신호 받아서 성공/실패 출력
-					if (isLoginSuccess()) {
-						System.out.println("로그인 성공");
-						new Client(cSocket);
-						frame.dispose();
+					if (nicknameTxt.getText().equals("")) {
+						JOptionPane.showMessageDialog(null, "공백은 입력할 수 없습니다");
 					}
 					else {
-						JOptionPane.showMessageDialog(null, "로그인 실패");
+						bw.write("LOGIN;");
+						bw.write(nicknameTxt.getText());
+						bw.write("\n");
+						bw.flush();
+
+						// 서버로부터 아이디 중복인지 신호 받아서 성공/실패 출력
+						if (isLoginSuccess()) {
+							System.out.println("로그인 성공");
+							new Client(cSocket);
+							frame.dispose();
+						}
+						else {
+							JOptionPane.showMessageDialog(null, "로그인 실패\nerror : 중복된 닉네임");
+						}
 					}
+					
 				} catch (IOException e1) {}
 			}
 		});

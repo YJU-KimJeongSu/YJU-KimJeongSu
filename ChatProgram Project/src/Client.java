@@ -3,17 +3,25 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class Client {
 	Socket cSocket;
 	private JFrame frame;
 	int autoLocationX = 5;
+	BufferedReader br;
+	BufferedWriter bw;
 
 	/**
 	 * Launch the application.
@@ -24,7 +32,10 @@ public class Client {
 				try {
 					@SuppressWarnings("unused")
 					// 로그인 먼저 해야하니 Client를 실행시켜도 ClientLogin로 연결
-					ClientLogin window = new ClientLogin();
+//					ClientLogin window = new ClientLogin();
+					
+					// ClientLogin으로 시작하면 윈도우빌더 고장남
+					Client window = new Client();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -36,8 +47,16 @@ public class Client {
 	 * Create the application.
 	 */
 	public Client(Socket cSocket) {
-//		System.out.println("전달받음 " + cSocket);
 		this.cSocket = cSocket;
+		try {
+			br = new BufferedReader(new InputStreamReader(cSocket.getInputStream()));
+			bw = new BufferedWriter(new OutputStreamWriter(cSocket.getOutputStream()));
+		} catch (IOException e) {}
+		initialize();
+	}
+	
+	// 윈도우 빌더 만들기용. 나중에 삭제
+	public Client() {
 		initialize();
 	}
 
@@ -50,6 +69,7 @@ public class Client {
 		frame.setBounds(100, 100, 600, 450);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setTitle("ChatClient");
 		
 		JPanel MainPanel = new JPanel();
 		frame.getContentPane().add(MainPanel, BorderLayout.CENTER);
@@ -65,16 +85,16 @@ public class Client {
 		
 		// 상단바 채팅방 만들기 버튼
 		// 누르면 새로운 JFrame 창이 떠서 연결하기
-		JButton makeRoom = new JButton();
-		makeRoom.addMouseListener(new MouseAdapter() {
+		JButton makeRoomWindowBtn = new JButton();
+		makeRoomWindowBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// 채팅방 만드는 JFream 띄우기
-				System.out.println("makeRoom 마우스 이벤트 발생");
+				// 채팅방 만드는 JFream 띄우기. modal은 JDialog만 되는듯
+				new MakeRoomModal(frame, new JLabel(), cSocket).setVisible(true);;
 			}
 		});
-		makeRoom.setBounds(5, 5, 50, 50);
-		chatRoomBarPanel.add(makeRoom);
+		makeRoomWindowBtn.setBounds(5, 5, 50, 50);
+		chatRoomBarPanel.add(makeRoomWindowBtn);
 		
 		// 상단바 채팅방 선택 버튼들
 		// 누르면 채팅방 변경
@@ -87,9 +107,12 @@ public class Client {
 		// 채팅방
 		// 채팅 입력하고, 채팅 보이게
 		JPanel chattingPanel = new JPanel();
-		chattingPanel.setBounds(0, 60, 588, 365);
+		chattingPanel.setBounds(0, 60, 588, 355);
 		MainPanel.add(chattingPanel);
 		chattingPanel.setLayout(null);
+		
+		
+		
 	}
 	
 	int autoLocationing() {

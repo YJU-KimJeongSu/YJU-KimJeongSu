@@ -84,8 +84,9 @@ public class Server {
 				}
 			}
 		});
-		frame.setBounds(100, 100, 400, 600);
+		frame.setBounds(0, 0, 400, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setTitle("ChatServer");
 		
 		// 메인프레임 전체를 덮는 메인패널
 		JPanel mainPanel = new JPanel();
