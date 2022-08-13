@@ -1,6 +1,8 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
@@ -34,6 +36,7 @@ public class Client {
 	JTextField sendMessageTxt;
 	String nowChatRoom = "";
 	String myNickname;
+	JLabel chatRoomLabel;
 	
 	// 독립적인 클래스로 만드니 변수나 메소드 쓰기 힘들어서 그냥 내부클래스로 선언
 	class ChatRoomBtn extends JButton {
@@ -52,14 +55,15 @@ public class Client {
 				public void mouseClicked(MouseEvent e) {
 					if (canRoomJoin(getText()))  {
 						try {
-							bw.write("JoinedRoom;" + name + "\n");
+							bw.write("JOINROOM;" + name + "\n");
 							bw.flush();
 							nowChatRoom = name;
+							chatRoomLabel.setText(nowChatRoom);
 //							modelAddElements(name + "채팅방에 참가하였습니다"); // 생각해보니 이거 서버에서 해야함
 						} catch (IOException e1) {}
 					}
 					else {
-						modelAddElements("[System]" + name + "채팅방에 이미 참가중입니다");
+						modelAddElements("[System]이미 참가중인 채팅방입니다");
 					}
 				}
 			});
@@ -73,7 +77,6 @@ public class Client {
 	
 	boolean canRoomJoin(String roomName) {
 		boolean b = false;
-		// JoinedRoom;방이름
 		try {
 			if (!nowChatRoom.equals(roomName)) b = true;
 		} catch (Exception e) {}
@@ -95,10 +98,10 @@ public class Client {
 				try {
 					@SuppressWarnings("unused")
 					// 로그인 먼저 해야하니 Client를 실행시켜도 ClientLogin로 연결
-//					ClientLogin window = new ClientLogin();
+					ClientLogin window = new ClientLogin();
 					
-					// ClientLogin으로 시작하면 윈도우빌더 고장남
-					Client window = new Client();
+//					// ClientLogin으로 시작하면 윈도우빌더 고장남
+//					Client window = new Client();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -174,24 +177,54 @@ public class Client {
 		scrollPane.setViewportView(chattingList);
 		
 		sendMessageTxt = new JTextField();
-		sendMessageTxt.setBounds(152, 370, 344, 35);
+		sendMessageTxt.setBounds(184, 370, 312, 35);
 		MainPanel.add(sendMessageTxt);
 		sendMessageTxt.setColumns(10);
 		
 		JButton sendBtn = new JButton("\uC804\uC1A1");
+		sendBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// CHAT;내용
+				try {
+					// 공백은 안보내지게
+					// 현재 접속중인 채팅방이 없으면 안내메세지
+					if (nowChatRoom.equals("") ) {
+						model.addElement("[System]현재 접속중인 채팅방이 없습니다");
+						sendMessageTxt.setText("");
+					}
+					else if (!sendMessageTxt.getText().equals("")) {
+						bw.write("CHAT;" + sendMessageTxt.getText() + "\n");
+						bw.flush();
+						sendMessageTxt.setText("");
+					}
+				} catch (IOException e1) {}
+			}
+		});
 		sendBtn.setBounds(506, 370, 72, 35);
 		MainPanel.add(sendBtn);
 		
 		JLabel lblNewLabel = new JLabel("ID : ");
-		lblNewLabel.setBounds(10, 380, 30, 15);
+		lblNewLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblNewLabel.setBounds(10, 363, 76, 22);
 		MainPanel.add(lblNewLabel);
 		
 		JLabel nicknameLabel = new JLabel("");
 		nicknameLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		nicknameLabel.setBounds(36, 376, 106, 22);
+		nicknameLabel.setBounds(92, 363, 90, 22);
 		nicknameLabel.setText(myNickname);
 		MainPanel.add(nicknameLabel);
 		
+		JLabel lblNewLabel_1 = new JLabel("\uD604\uC7AC \uCC44\uD305\uBC29 :");
+		lblNewLabel_1.setBounds(10, 383, 82, 22);
+		MainPanel.add(lblNewLabel_1);
+		
+		chatRoomLabel = new JLabel((String) null);
+		chatRoomLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		chatRoomLabel.setBounds(92, 387, 90, 22);
+		MainPanel.add(chatRoomLabel);
+		
+		
+		// 서버에서 받은 메세지 처리하는 스레드
 		new Thread() {
 			public void run() {
 				String input = null;
@@ -213,10 +246,15 @@ public class Client {
 								}
 							}
 						}
-						else if (input.startsWith("JoinRoom;")) {
-							input = input.replaceAll("JoinRoom;", "");
-							// input = JoinRoom;접속자_닉네임
+						else if (input.startsWith("JoinedRoom;")) {
+							input = input.replaceAll("JoinedRoom;", "");
+							// input = JoinedRoom;접속자_닉네임
 							model.addElement("[System]" + input + "님이 채팅방에 참가하였습니다.");
+						}
+						else if (input.startsWith("Chat;")) {
+							// 메시지 내용은 ;이 들어갈수도 있으니, Chat;Chat;Chat;asdasd 같은 메세지가 올 수도 있음
+							input = input.substring(5, input.length());
+							model.addElement(input);
 						}
 					} catch (IOException | InterruptedException e) {
 						System.err.println("서버와 연결이 종료되었습니다.");

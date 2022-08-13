@@ -43,15 +43,17 @@ public class ServerThread extends Thread{
 	public synchronized void sendToAllUser(String message) {
 		for (BufferedWriter tBw : Server.roomMember.keySet()) {
 			try {
-				Thread.sleep(50);
 				tBw.write(message + "\n");
 				tBw.flush();
-				
-				// 버퍼라이터 -> 버퍼리더 -> 닉네임
-				tempBr = Server.users.get(tBw);
-				tempNickname = Server.nickname.get(tempBr);
-				addServerState(tempNickname + "에게 " + message + "전송");
-			} catch (IOException | InterruptedException e) {}
+			} catch (IOException e) {}
+		}
+		
+		// 위랑 같은 for문인데 addServerState에 지연이 있어서 전송 속도떄문에 따로 나눔
+		for (BufferedWriter tBw : Server.roomMember.keySet()) {
+			// 버퍼라이터 -> 버퍼리더 -> 닉네임
+			tempBr = Server.users.get(tBw);
+			tempNickname = Server.nickname.get(tempBr);
+			addServerState("send to " + tempNickname + " : " + message);
 		}
 	}
 
@@ -65,16 +67,16 @@ public class ServerThread extends Thread{
 		// LOGIN;nickname
 		// CHAT;챗내용
 		// MAKEROOM;방이름
-		// JoinedRoom;방이름
+		// JOINROOM;방이름
 		
 		// 보낼 데이터 형식
 		// LoginFailed
 		// LoginSuccess
-		// Chat;방이름:닉네임:내용
+		// Chat;닉네임:내용  -> 받아서 닉네임 안잘라도 됨
 		// MakeRoomFailed
 		// MakeRoomSuccess
 		// NowRoomList;방이름:방이름:방이름:
-		// JoinRoom;닉네임
+		// JoinedRoom;닉네임
 		
 		try {
 			// 해당 소켓(사용자)의 입/출력 담당
@@ -113,7 +115,7 @@ public class ServerThread extends Thread{
 			for (String str : Server.roomList) tempMessage0 += str + ":";
 			bw.write(tempMessage0 + "\n");
 			bw.flush();
-			addServerState(nickname + "에게 " + tempMessage0 + "전송");
+			addServerState("send to " + nickname + " : " + tempMessage0);
 
 			// 로그인 했으니 본격적 채팅 시작
 			while (true) {
@@ -143,10 +145,9 @@ public class ServerThread extends Thread{
 				}
 				
 				// 채팅방 들어가기
-				else if (input.startsWith("JoinedRoom")) {
-					input = input.replaceAll("JoinedRoom;", "");
-					// 해당 유저의 채팅방 정보 변경하고
-					// 해당 채팅방의 모든 사람에게 메세지 뿌리기
+				else if (input.startsWith("JOINROOM")) {
+					input = input.replaceAll("JOINROOM;", "");
+					// 해당 유저의 채팅방 정보 변경하고 해당 채팅방의 모든 사람에게 메세지 뿌리기
 					Server.roomMember.remove(bw);
 					Server.roomMember.put(bw, input);
 					addServerState(nickname + " : " + input + "채팅방 접속");
@@ -155,19 +156,46 @@ public class ServerThread extends Thread{
 						// Server.roomMember.get(tBw)도 리턴값이 String인데
 						// Server.roomMember.get(tBw).equals는 안먹힘
 						if (input.equals(Server.roomMember.get(tBw))) {
-							tBw.write("JoinRoom;" + nickname + "\n");
+							tBw.write("JoinedRoom;" + nickname + "\n");
 							tBw.flush();
+						}
+					}
+					// 위랑 같은 for문인데 addServerState에 지연이 있어서 전송 속도떄문에 따로 나눔
+					for (BufferedWriter tBw : Server.roomMember.keySet()) {
+						if (input.equals(Server.roomMember.get(tBw))) {
 							// 버퍼라이터 -> 버퍼리더 -> 닉네임
 							BufferedReader tBr = Server.users.get(tBw);
-							String tempMessage2 = Server.nickname.get(tBr);
-							addServerState(tempMessage2 + "에게 " + nickname + "이 " + input + "에 접속했음을 전달");
+							String tempMessage2 = Server.nickname.get(tBr); 
+							addServerState("send to " + tempMessage2 + " : 채팅 접속 정보");
 						}
 					}
 				}
 				
 				// 그냥 채팅
-				else if (input.startsWith("Chat")) {
+				else if (input.startsWith("CHAT")) {
+					// 메시지 내용은 ;이 들어갈수도 있으니, CHAT;CHAT;CHAT;asdasd 같은 메세지가 올 수도 있음
+					// 채팅방이 null이면 Client에서 처리
+					input = input.substring(5, input.length());
+					addServerState(nickname + "'s CHAT : " + input);
 					
+					// 같은방인 사람들 한테만 메세지 보내기
+					// roomMember에 모든 버퍼라이터 돌면서 값이 input의 값이랑 같으면 메시지 보내기
+					String inputRoom = Server.roomMember.get(bw);
+					for (BufferedWriter tBw : Server.roomMember.keySet()) {
+						if (inputRoom.equals(Server.roomMember.get(tBw))) {
+							tBw.write("Chat;" + nickname + ":" + input + "\n");
+							tBw.flush();
+						}
+					}
+					// 위랑 같은 for문인데 addServerState에 지연이 있어서 전송 속도떄문에 따로 나눔
+					for (BufferedWriter tBw : Server.roomMember.keySet()) {
+						if (inputRoom.equals(Server.roomMember.get(tBw))) {
+							// 버퍼라이터 -> 버퍼리더 -> 닉네임
+							BufferedReader tBr = Server.users.get(tBw);
+							String tempMessage2 = Server.nickname.get(tBr);
+							addServerState("send to " + tempMessage2 + " : " + "Chat;" + nickname + ":" + input);
+						}
+					}
 				}
 				
 				// 이거 뜨면 뭔가 잘못된거
