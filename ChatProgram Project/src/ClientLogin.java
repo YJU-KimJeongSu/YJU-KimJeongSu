@@ -17,6 +17,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class ClientLogin {
 	private Socket cSocket;
@@ -125,7 +127,13 @@ public class ClientLogin {
 		panel.add(nicknameLabel);
 		
 		nicknameTxt = new JTextField();
-		nicknameTxt.setText("ID");
+		nicknameTxt.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				if (nicknameTxt.getText().equals("ID (닉네임) 입력")) nicknameTxt.setText("");
+			}
+		});
+		nicknameTxt.setText("ID (\uB2C9\uB124\uC784) \uC785\uB825");
 		nicknameTxt.setColumns(10);
 		nicknameTxt.setBounds(122, 62, 132, 21);
 		nicknameTxt.setVisible(false);
@@ -142,6 +150,10 @@ public class ClientLogin {
 					}
 					else if (nicknameTxt.getText().contains(":")) {
 						JOptionPane.showMessageDialog(null, ":은 입력할 수 없습니다");
+					}
+					else if (nicknameTxt.getText().equals("ID (닉네임) 입력")) {
+						nicknameTxt.setText("");
+						nicknameTxt.grabFocus();
 					}
 					else {
 						bw.write("LOGIN;");

@@ -151,7 +151,7 @@ public class Server {
 		while (true) {
 			try {
 				// 연결 들어와야 다음 진행
-				Thread.sleep(50); // 렉 방지. 간혹 묘하게 버벅거림 원인인듯?
+				Thread.sleep(50); // 렉 방지. 간혹 버벅거림 원인인듯?. 지연 넣으니 버벅거림 사라짐
 				sSocket.bind(new InetSocketAddress(Integer.parseInt(portTextBox.getText())));
 			} catch (IOException | InterruptedException e) {
 				return;
