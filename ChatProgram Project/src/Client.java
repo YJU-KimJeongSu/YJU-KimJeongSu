@@ -122,10 +122,10 @@ public class Client {
 				try {
 					@SuppressWarnings("unused")
 					// 로그인 먼저 해야하니 Client를 실행시켜도 ClientLogin로 연결
-//					ClientLogin window = new ClientLogin();
+					ClientLogin window = new ClientLogin();
 					
 					// ClientLogin으로 시작하면 윈도우빌더 고장남
-					Client window = new Client();
+//					Client window = new Client();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
