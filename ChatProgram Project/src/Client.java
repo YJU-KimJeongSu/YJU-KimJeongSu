@@ -14,10 +14,12 @@ import java.net.Socket;
 import java.util.HashMap;
 
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -29,6 +31,7 @@ public class Client {
 	private JFrame frame;
 	Socket cSocket;
 	int autoLocationX = -45;
+	int chatRoomCount = 0;
 	BufferedReader br;
 	BufferedWriter bw;
 	DefaultListModel<String> model;
@@ -42,12 +45,33 @@ public class Client {
 	class ChatRoomBtn extends JButton {
 		String name;
 		public ChatRoomBtn(JPanel panel, int x, String name) {
+//			super(name, new ImageIcon("img/chatRoomBtn.jpg"));
 			panel.add(this);
 			setBounds(x, 5, 100, 50);
+			setHorizontalTextPosition(CENTER);
+			setVerticalTextPosition(CENTER); // 이거 두개 없으면 글자가 우측으로 밀림
 			addMouseListener();
 			setText(name);
+			setBorderPainted(false);
+			setContentAreaFilled(false);
+			setIcon(new ImageIcon("img/chatRoomBtn.jpg"));
+//			setSelectedIcon(new ImageIcon("img/chatRoomBtnFocus.jpg")); 마우스 올렸을 떄 아닌듯
 			this.name = name;
+			setPressedIcon(new ImageIcon("img/chatRoomBtnClick.jpg"));
+			addMouseListener(new MouseAdapter() {
+				// 마우스 올렸을 때 아이콘 변경해주는 메소드가 없어서 마우스 이벤트로 적용
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					setIcon(new ImageIcon("img/chatRoomBtnFocus.jpg"));
+				}
+				@Override
+				public void mouseExited(MouseEvent e) {
+					setIcon(new ImageIcon("img/chatRoomBtn.jpg"));
+				}
+			});
 		}
+
+		
 
 		public synchronized void addMouseListener() {
 			addMouseListener(new MouseAdapter() {
@@ -98,10 +122,10 @@ public class Client {
 				try {
 					@SuppressWarnings("unused")
 					// 로그인 먼저 해야하니 Client를 실행시켜도 ClientLogin로 연결
-					ClientLogin window = new ClientLogin();
+//					ClientLogin window = new ClientLogin();
 					
-//					// ClientLogin으로 시작하면 윈도우빌더 고장남
-//					Client window = new Client();
+					// ClientLogin으로 시작하면 윈도우빌더 고장남
+					Client window = new Client();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -152,12 +176,24 @@ public class Client {
 		
 		// 상단바 채팅방 만들기 버튼
 		// 누르면 새로운 JFrame 창이 떠서 연결하기
-		JButton makeRoomWindowBtn = new JButton();
+		JButton makeRoomWindowBtn = new JButton(new ImageIcon("img/addChatRoomBtn.jpg"));
+		makeRoomWindowBtn.setPressedIcon(new ImageIcon("img/addChatRoomBtnClick.jpg"));
+		makeRoomWindowBtn.setBorderPainted(false);
+		makeRoomWindowBtn.setContentAreaFilled(false);
 		makeRoomWindowBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// 채팅방 만드는 JFream 띄우기. modal은 JDialog만 되는듯
-				new MakeRoomModal(frame, new JLabel(), br, bw).setVisible(true);;
+				if (chatRoomCount >= 5) JOptionPane.showMessageDialog(null, "더이상 생성할 수 없습니다\n채팅방 수가 최대입니다");
+				else new MakeRoomModal(frame, new JLabel(), br, bw).setVisible(true);;
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				makeRoomWindowBtn.setIcon(new ImageIcon("img/addChatRoomBtnFocus.jpg"));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				makeRoomWindowBtn.setIcon(new ImageIcon("img/addChatRoomBtn.jpg"));
 			}
 		});
 		makeRoomWindowBtn.setBounds(5, 5, 50, 50);
@@ -181,7 +217,8 @@ public class Client {
 		MainPanel.add(sendMessageTxt);
 		sendMessageTxt.setColumns(10);
 		
-		JButton sendBtn = new JButton("\uC804\uC1A1");
+		JButton sendBtn = new JButton(new ImageIcon("img/sendBtn.jpg"));
+		sendBtn.setPressedIcon(new ImageIcon("img/sendBtnClick.jpg"));
 		sendBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// CHAT;내용
@@ -198,6 +235,17 @@ public class Client {
 						sendMessageTxt.setText("");
 					}
 				} catch (IOException e1) {}
+			}
+			
+		});
+		sendBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				sendBtn.setIcon(new ImageIcon("img/sendBtnFocus.jpg"));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				sendBtn.setIcon(new ImageIcon("img/sendBtn.jpg"));
 			}
 		});
 		sendBtn.setBounds(506, 370, 72, 35);
@@ -232,7 +280,7 @@ public class Client {
 					try {
 						Thread.sleep(10);
 						input = br.readLine();
-						// 클라이언트가 받을 메세지 : 채팅, 방 조인(해당 방에 사람만), 방 생성
+						// 클라이언트가 받을 메세지 : 채팅, 방 조인(해당 방에 사람만), 방 생성 -> 현재 모든 방 정보 받는걸로 대체
 						
 						// 방 생성 시 버튼이랑 방 연결하는거 신경쓰기
 						// NowRoomList;방이름:방이름:방이름:
@@ -243,6 +291,8 @@ public class Client {
 							for (int i = 0; i < str.length; i++) {
 								if (!chatRoom.containsKey(str[i]) && !str[i].equals("")) {
 									chatRoom.put(str[i], new ChatRoomBtn(chatRoomBarPanel, autoLocationing(), str[i]));
+									chatRoomCount++;
+									System.out.println(chatRoomCount);
 								}
 							}
 						}
