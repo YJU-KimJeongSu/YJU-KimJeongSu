@@ -12,32 +12,36 @@ public class KJS_Q2805 {
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		
 		int n = Integer.parseInt(st.nextToken());
-		int m = Integer.parseInt(st.nextToken());
-		int min = 0; 
-		int max = 0;
-		int mid = 0; // 톱 설치할 높이
-		int sum = 0; // 캔 나무 
-		int[] tree = new int[n];
+		long m = Long.parseLong(st.nextToken());
+		long min = 0; 
+		long max = 0;
+		long cutter = 0; // 톱 설치할 높이
+		long sum = 0; // 캔 나무 
+		long[] tree = new long[n];
 		st = new StringTokenizer(br.readLine());
 		for (int i = 0; i < n; i++) {
-			tree[i] = Integer.parseInt(st.nextToken());
+			tree[i] = Long.parseLong(st.nextToken());
 			if (tree[i] > max) max = tree[i];
 		}
 		
-		
-		while (true) {
-			int t = 0;
-			mid = (min + max) / 2;
+		boolean isBigger = false;
+		while (min <= max) {
+			sum = 0;
+			cutter = (min + max) / 2;
 			
 			for (int i = 0; i < tree.length; i++) {
-				if (tree[i] - mid > 0) sum += tree[i] - mid; 
+				if (tree[i] > cutter) sum += tree[i] - cutter;
 			}
+			if (sum >= m) isBigger = true;
+			else isBigger = false;
 			
 			if (sum == m) break;
-			else if (sum > m) min = mid;
-			else if (sum < m) max = mid;
-			t = mid; // 항상 딱 맞게 잘리는건 아니니 값 저장
-		}
+			else if (sum < m) max = cutter-1;
+			else min = cutter+1;
+		}	
+		
+		if (isBigger || cutter == 0) System.out.println(cutter);
+		else System.out.println(cutter-1);
 	}
 
 }
