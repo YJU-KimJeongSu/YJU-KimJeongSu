@@ -1,0 +1,24 @@
+아래 내용은 인터넷에서 찾은 자료 외에도 혼자 작업하며 알아낸 정보도 섞여있습니다.
+따라서 100% 정확한 내용은 아닐 수도 있습니다.
+
+-----------------------------------------------------------------------------
+
+redirect : 새로운 접속 요청 - request, response가 다시 생성 (+주소가 바뀜)
+forward : 기존 접속 유지 - request, response 그대로 유지 (+주소 안바뀜)
+
+request로 parameter를 전달할 때 Redirect를 true로 설정하면 request가 소멸되어 전달하는 정보가 사라짐(= 버그 발생)
+
+! Redirect가 true면 프로젝트명부터 시작하는 주소 사용
+	ex) /Hanmall/com/yju/2wda/kjs67/view/...
+! Redirect가 false면(=forward 방식이면) 프로젝트명 바로 뒤부터 시작하는 주소 사용
+	ex) /com/yju/2wda/kjs67/view/...
+! Html에서 주소를 이동하면 redirect 방식으로 이동됨 (= request 소멸)
+
+----------------------------------------------------------------------------
+
+session.setAttribute("속성명", 값); : 정보 전달. 페이지를 끄거나 오래 방치(30분?)하지 않는 한 사라지지 않음. 남발하지 않는 습관 필요(서버에 메모리 부담이 크고 스스로 소멸되지 않아 꼬이기 쉬움)
+session.getAttribute("속성명"); : 값 가져옴 (Object로 반환 => 형변환 필요)
+
+request.setAttribute("속성명", 값); : 정보 전달. 페이지 이동(= redirect)하면 사라짐. 굳이 유지되어야 하는게 아닌 경우 대부분의 값은  이걸로 전달
+request.getAttribute("속성명"); : 값 가져옴 (Object로 반환 => 형변환 필요)
+request.getParameter("파라미터명"); : 값 가져옴 (String). html에서 get방식이나 post 방식으로 보낸 데이터 수신
