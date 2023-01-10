@@ -1,0 +1,15 @@
+.container {
+    /* background-color: lightgray; */
+    /* background-color: whitesmoke; */
+    display: flex;
+    flex-direction: column;
+}
+
+th, td {
+    vertical-align: middle;
+    text-align: center;
+}
+
+.tablebtn {
+    padding: 0.1vw 0.2vw 0.1vw 0.2vw;
+}

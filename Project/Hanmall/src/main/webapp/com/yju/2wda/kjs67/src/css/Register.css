@@ -1,0 +1,151 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 95%;
+    max-width: 1000px;
+}
+
+.regi-form {
+    /* display: flex;
+    flex-direction: row; */
+    background-color: lightgray;
+    border-radius: 5px;
+    padding: 2vw;
+    width: 95%;
+    max-width: 1000px;
+}
+
+.regi-form > label {
+    font-size: min(2vw, 20px);
+}
+
+.regi-form > h2 {
+    flex-grow: 4;
+    font-size: min(2.5vw, 30px);
+    margin-bottom: 2vw;
+}
+
+.inputbox {
+    margin-left: 1vw;
+    margin-right: 1vw;
+    height: 4vw;
+    width: 20vw;
+    padding: 0 1vw;
+    border: 3px solid #ddd;
+    border-radius: 6px;
+    outline: 0;
+    font-size: min(2vw, 20px);
+    margin-top: 1vw;
+    margin-bottom: 1vw;
+}
+
+.inputbox:focus {
+    transition: .5s;
+    border-color: #0f7ef1;
+}
+
+.inputbox::placeholder {
+    color: darkgray;
+}
+
+
+.emailbox {
+    margin-left: 1vw;
+    margin-right: 1vw;
+    height: 4vw;
+    width: 30vw;
+    padding: 0 1vw;
+    border: 3px solid #ddd;
+    border-radius: 6px;
+    outline: 0;
+    font-size: min(2vw, 20px);
+    margin-top: 1vw;
+    margin-bottom: 1vw;
+}
+
+.emailbox:focus {
+    transition: .5s;
+    border-color: #0f7ef1;
+}
+
+.emailbox::placeholder {
+    color: darkgray;
+}
+
+.phonebox {
+    margin-left: 1vw;
+    margin-right: 1vw;
+    height: 4vw;
+    width: 10vw;
+    padding: 0 1vw;
+    border: 3px solid #ddd;
+    border-radius: 6px;
+    outline: 0;
+    font-size: min(2vw, 20px);
+    margin-top: 1vw;
+    margin-bottom: 1vw;
+}
+
+.phonebox:focus {
+    transition: .5s;
+    border-color: #0f7ef1;
+}
+
+.phonebox::placeholder {
+    color: darkgray;
+}
+
+.addrbox {
+    margin-left: 1vw;
+    margin-right: 1vw;
+    height: 4vw;
+    width: 50vw;
+    max-width: 700px;
+    padding: 0 1vw;
+    border: 3px solid #ddd;
+    border-radius: 6px;
+    outline: 0;
+    font-size: min(2vw, 20px);
+    margin-top: 1vw;
+    margin-bottom: 1vw;
+}
+
+.addrbox:focus {
+    transition: .5s;
+    border-color: #0f7ef1;
+}
+
+.addrbox::placeholder {
+    color: darkgray;
+}
+
+.red {
+    color: red;
+}
+
+.hidden {
+    opacity: 0%;
+}
+
+.btns {
+    display: flex;
+    flex-direction: row;
+    margin: 2vw;
+    justify-content: flex-end;
+    width: 80%;
+    max-width: 1000px;
+}
+
+.btns > * {
+    margin-left: 2vw;
+    width: max(8vw, 80px);
+    height: max(3vw, 30px);
+    font-size: max(1.2vw, 10px);
+}
+
+.dangerbtn {
+	/* justify-self: flex-start; 이런 속성 없음 */
+	margin-right: auto;
+}

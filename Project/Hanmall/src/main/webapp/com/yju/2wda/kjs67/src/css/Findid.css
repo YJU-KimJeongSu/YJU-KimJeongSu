@@ -1,0 +1,74 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    background-color: lightgray;
+    border-radius: 5px;
+    align-items: center;
+    justify-content: center;
+    width: 40vw;
+    padding: 2vw;
+}
+
+.container > h2 {
+    flex-grow: 4;
+    font-size: min(2.5vw, 30px);
+    margin-bottom: 2vw;
+}
+
+.inputbox {
+    margin-left: 1vw;
+    margin-right: 1vw;
+    height: 5vw;
+    width: 20vw;
+    padding: 0 1vw;
+    border: 3px solid #ddd;
+    border-radius: 6px;
+    outline: 0;
+    font-size: min(2vw, 20px);
+    margin-top: 1vw;
+    margin-bottom: 1vw;
+}
+
+.inputbox:focus {
+    transition: .5s;
+    border-color: #0f7ef1;
+}
+
+.inputbox::placeholder {
+    color: darkgray;
+}
+
+.phonebox {
+    margin-left: 1vw;
+    margin-right: 1vw;
+    height: 5vw;
+    width: 12vw;
+    padding: 0 1vw;
+    border: 3px solid #ddd;
+    border-radius: 6px;
+    outline: 0;
+    font-size: min(2vw, 20px);
+    margin-top: 1vw;
+    margin-bottom: 1vw;
+}
+
+.phonebox:focus {
+    transition: .5s;
+    border-color: #0f7ef1;
+}
+
+.phonebox::placeholder {
+    color: darkgray;
+}
+
+.red {
+    color: red;
+}
+
+.searchbtn {
+    margin-top: 1vw;
+    width: max(10vw, 150px);
+    height: max(4vw, 40px);
+    font-size: max(1.2vw, 10px);
+    text-align: center;
+}

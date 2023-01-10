@@ -1,0 +1,78 @@
+@font-face {
+    src: url("../fonts/BMHANNAAir_otf.otf");
+    font-family: "HannaAir";
+}
+@font-face {
+    src: url("../fonts/BMHANNAProOTF.otf");
+    font-family: "HannaPro";
+}
+@font-face {
+    src: url("../fonts/BMJUA_otf.otf");
+    font-family: "Jua";
+}
+@font-face {
+    src: url("../fonts/NanumGothic.otf");
+    font-family: "NanumGothic";
+}
+@font-face {
+    src: url("../fonts/NanumGothicBold.otf");
+    font-family: "NanumGothicBold";
+}
+@font-face {
+    src: url("../fonts/NanumGothicExtraBold.otf");
+    font-family: "NanumGothicExtraBold";
+}
+@font-face {
+    src: url("../fonts/NanumGothicLight.otf");
+    font-family: "NanumGothicLight";
+}
+@font-face {
+    src: url("../fonts/NanumSquareRoundOTFB.otf");
+    font-family: "NanumSquareRoundB";
+}
+@font-face {
+    src: url("../fonts/NanumSquareRoundOTFEB.otf");
+    font-family: "NanumSquareRoundEB";
+}
+@font-face {
+    src: url("../fonts/NanumSquareRoundOTFL.otf");
+    font-family: "NanumSquareRoundL";
+}
+@font-face {
+    src: url("../fonts/NanumSquareRoundOTFR.otf");
+    font-family: "NanumSquareRoundR";
+}
+
+.font_HannaAir {
+    font-family: "HannaAir";
+}
+.font_HannaPro {
+    font-family: "HannaPro";
+}
+.font_Jua {
+    font-family: "Jua";
+}
+.font_NanumGothic {
+    font-family: "NanumGothic";
+}
+.font_NanumGothicBold {
+    font-family: "NanumGothicBold";
+}
+.font_NanumGothicExtraBold {
+    font-family: "NanumGothicExtraBold";
+}
+.font_NanumGothicLight {
+    font-family: "NanumGothicLight";
+}
+.font_NanumSquareRoundB {
+    font-family: "NanumSquareRoundB";
+}
+.font_NanumSquareRoundEB {
+    font-family: "NanumSquareRoundEB";
+}
+.font_NanumSquareRoundL {
+    font-family: "NanumSquareRoundL";
+}
+.font_NanumSquareRoundR {
+    font-family: "NanumSquareRoundR";
+}

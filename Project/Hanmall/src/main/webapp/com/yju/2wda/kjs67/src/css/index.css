@@ -1,0 +1,97 @@
+.container {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-around;
+}
+/* 자동 스크롤 관련 bootstrap으로 변경 */
+/* #eventBanner {
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    list-style: none;
+    align-self: center;
+}
+
+#slideWrap { 
+    width: 1200px;
+    height: 400px;
+    overflow: hidden;
+    position: relative;
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+}
+
+#slider {
+    height: 100%;
+    position: absolute;
+    background-color: aliceblue;
+    margin: 0px; 
+    padding: 0px;
+    border: 0px;
+}
+
+#slider ul {
+    display: inline;
+    width: 1200px;
+}
+
+#slider li {
+    float: left;
+    width: 1200px;
+    height: 100%;
+} */
+
+.categorys {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.text-deco {
+	text-decoration: none;
+	color: black;
+}
+
+.cards {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    margin-bottom: 40px;
+}
+
+.title {
+    display: flex;
+}
+
+.title > a {
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: black;
+    font-size: 1.8vw;
+}
+
+hr {
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+
+.card {
+    display: flex;
+    align-self: center;
+    justify-content: center;
+    width: 17vw;
+    height: 26vw;
+}
+
+.card-body {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.card-body > p {
+    font-size: 1.2vw;
+    margin: 2px;
+}
