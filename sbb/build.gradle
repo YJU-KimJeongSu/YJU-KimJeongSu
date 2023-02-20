@@ -15,9 +15,11 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools' // 개발 환경에만 적용. jar, war에는 제외
-    compileOnly 'org.projectlombok:lombok' // 컴파일 단계에서만 필요한 경우에 사용
-    annotationProcessor 'org.projectlombok:lombok' // 컴파일 단계에서 애너테이션 분석/처리
+    developmentOnly 'org.springframework.boot:spring-boot-devtools' // developmentOnly : 개발 환경에만 적용. jar, war에는 제외
+    compileOnly 'org.projectlombok:lombok' // compileOnly : 컴파일 단계에서만 필요한 경우에 사용
+    annotationProcessor 'org.projectlombok:lombok' // annotationProcessor : 컴파일 단계에서 애너테이션 분석/처리
+    runtimeOnly 'com.h2database:h2' // runtimeOnly : 런타임 단계에서만 필요한 경우에 사용
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // 라이브러리 설치용으로 일반적으로 사용. 라이브러리랑 직접 관련이 있는 모듈만 컴파일해서 rebuild가 빠름
 }
 
 tasks.named('test') {
